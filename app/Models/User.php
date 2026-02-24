@@ -3,8 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -47,9 +50,14 @@ class User extends Authenticatable
         ];
     }
 
-    public function brands(): HasMany
+    public function brand(): HasOne
     {
-        return $this->hasMany(Brand::class);
+        return $this->hasOne(Brand::class);
+    }
+
+    public function getUserBrand()
+    {
+        return $this->brands()->where('user_id', Auth()->user->id)->first();
     }
 
     public function parties(): HasMany

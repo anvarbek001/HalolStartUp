@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             ViloyatSeeder::class,
-            TumanSeeder::class
+            TumanSeeder::class,
+            UserSeeder::class
         ]);
 
         User::factory()->create([

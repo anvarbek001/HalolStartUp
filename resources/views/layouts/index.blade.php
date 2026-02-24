@@ -333,8 +333,12 @@
                         class="w-full pl-10 pr-4 py-2 text-sm bg-gray-100/80 dark:bg-gray-800/80 border border-transparent focus:border-primary-300 dark:focus:border-primary-700 rounded-xl outline-none transition-all placeholder:text-gray-400">
                 </div>
 
-                <div class="flex items-center gap-2 ml-auto">
+                <div class="flex items-center gap-2">
+                    <h3 class="font-display font-700 text-sm">Sizning qr Id kodingiz:</h3>
+                    <strong>{{ Auth()->user()->id . Auth()->user()->brand->id }}</strong>
+                </div>
 
+                <div class="flex items-center gap-2 ml-auto">
                     <!-- Dark mode -->
                     <button @click="darkMode = !darkMode"
                         class="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors">
