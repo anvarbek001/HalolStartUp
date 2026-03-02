@@ -37,11 +37,11 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-        if (isEmpty($user->brand) || $user->brand->name == null) {
+        if (!$user->brand || $user->brand->name == null) {
             return redirect()->route('brandRegister')->with('error', "Brendni ro'yxatdan o'tkazing");
+        } else {
+            return redirect()->intended(route('dashboard', absolute: false));
         }
-
-        return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**
