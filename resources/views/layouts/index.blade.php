@@ -212,6 +212,47 @@
         .progress-bar {
             transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        .click_logo {
+            padding: 4px 10px;
+            cursor: pointer;
+            color: #fff;
+            line-height: 190%;
+            font-size: 13px;
+            font-family: Arial;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #037bc8;
+            text-shadow: 0px -1px 0px #037bc8;
+            border-radius: 4px;
+            background: #27a8e0;
+            background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzI3YThlMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxYzhlZDciIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+            background: -webkit-gradient(linear, 0 0, 0 100%, from(#27a8e0), to(#1c8ed7));
+            background: -webkit-linear-gradient(#27a8e0 0%, #1c8ed7 100%);
+            background: -moz-linear-gradient(#27a8e0 0%, #1c8ed7 100%);
+            background: -o-linear-gradient(#27a8e0 0%, #1c8ed7 100%);
+            background: linear-gradient(#27a8e0 0%, #1c8ed7 100%);
+            box-shadow: inset 0px 1px 0px #45c4fc;
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#27a8e0', endColorstr='#1c8ed7', GradientType=0);
+            -webkit-box-shadow: inset 0px 1px 0px #45c4fc;
+            -moz-box-shadow: inset 0px 1px 0px #45c4fc;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+        }
+
+        .click_logo i {
+            background: url(https://m.click.uz/static/img/logo.png) no-repeat top left;
+            width: 30px;
+            height: 25px;
+            display: block;
+            float: left;
+        }
+
+        .search_box {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
     </style>
 </head>
 
@@ -322,15 +363,95 @@
                 </button>
 
                 <!-- Search -->
-                <div class="flex-1 max-w-md relative">
-                    <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                <div class="search_box max-w-md relative">
+                    <div style="">Hisobingizda: <strong>40.000.000</strong> uzs</div>
+
+                    <div x-data="{ open: false, amount: '', loading: false }">
+
+                        <button @click="open = true" class="click_logo">Hisobni to'ldirish</button>
+
+                        <!-- Backdrop -->
+                        <div x-show="open" @click="open = false"
+                            style="position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:40;">
+                        </div>
+
+                        <!-- Modal -->
+                        <div x-show="open" @keydown.escape.window="open = false"
+                            style="position:fixed; inset:0; z-index:50; display:flex; align-items:center; justify-content:center; padding:16px;">
+
+                            <div
+                                style="background:#fff; border-radius:20px; box-shadow:0 25px 60px rgba(0,0,0,0.2); width:100%; max-width:440px; padding:28px; position:relative;">
+
+                                <!-- Close -->
+                                <button @click="open = false"
+                                    style="position:absolute; top:16px; right:16px; background:none; border:none; cursor:pointer; color:#9ca3af; font-size:20px;">✕</button>
+
+                                <!-- Header -->
+                                <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+                                    <div
+                                        style="width:44px; height:44px; background:#22c55e; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px;">
+                                        💳</div>
+                                    <div>
+                                        <div style="font-size:1.1rem; font-weight:700; color:#1f2937;">Hisobni
+                                            to'ldirish</div>
+                                        <div style="font-size:0.8rem; color:#9ca3af;">Click orqali to'lov</div>
+                                    </div>
+                                </div>
+
+                                <!-- Input -->
+                                <label
+                                    style="display:block; font-size:0.85rem; font-weight:600; color:#6b7280; margin-bottom:8px;">Summa</label>
+                                <div style="position:relative; margin-bottom:16px;">
+                                    <input x-model="amount" type="number" min="1000" placeholder="50 000"
+                                        style="width:100%; border:1.5px solid #e5e7eb; border-radius:12px; padding:12px 52px 12px 16px; font-size:1.1rem; font-weight:600; color:#1f2937; outline:none; box-sizing:border-box;"
+                                        @focus="$el.style.borderColor='#22c55e'"
+                                        @blur="$el.style.borderColor='#e5e7eb'">
+                                    <span
+                                        style="position:absolute; right:16px; top:50%; transform:translateY(-50%); color:#9ca3af; font-size:0.85rem;">so'm</span>
+                                </div>
+
+                                <!-- Quick amounts -->
+                                <div style="display:flex; gap:8px; margin-bottom:24px;">
+                                    <template x-for="val in [10000, 50000, 100000, 200000]">
+                                        <button @click="amount = val"
+                                            :style="amount == val ?
+                                                'background:#22c55e; color:#fff; border-color:#22c55e;' :
+                                                'background:#f9fafb; color:#6b7280; border-color:#e5e7eb;'"
+                                            style="flex:1; border:1.5px solid; border-radius:10px; padding:8px 4px; font-size:0.78rem; font-weight:700; cursor:pointer; transition:.2s;">
+                                            <span x-text="(val/1000)+'K'"></span>
+                                        </button>
+                                    </template>
+                                </div>
+
+                                <!-- Submit -->
+                                <form
+                                    :action="`https://my.click.uz/services/pay?service_id={{ env('CLICK_SERVICE_ID') }}&merchant_id={{ env('CLICK_MERCHANT_ID') }}&amount=${amount}&transaction_param={{ auth()->id() }}&return_url={{ url('/payment/success') }}`"
+                                    method="POST">
+                                    <button type="submit" :disabled="!amount || amount < 1000"
+                                        @click="loading = true"
+                                        :style="(!amount || amount < 1000) ?
+                                        'background:#f3f4f6; color:#d1d5db; cursor:not-allowed;' :
+                                        'background:#22c55e; color:#fff; cursor:pointer; box-shadow:0 4px 20px rgba(34,197,94,.35);'"
+                                        style="width:100%; padding:14px; border:none; border-radius:12px; font-size:0.95rem; font-weight:700; transition:.2s; display:flex; align-items:center; justify-content:center; gap:8px;">
+                                        <span
+                                            x-text="loading ? 'Yo\'naltirilmoqda...' : 'Click orqali to\'lash'"></span>
+                                    </button>
+                                </form>
+
+                                <p style="text-align:center; font-size:0.75rem; color:#9ca3af; margin-top:16px;">
+                                    🔒 To'lov Click xavfsiz muhitida amalga oshiriladi
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </div>
                     <input type="text" placeholder="Qidirish..."
-                        class="w-full pl-10 pr-4 py-2 text-sm bg-gray-100/80 dark:bg-gray-800/80 border border-transparent focus:border-primary-300 dark:focus:border-primary-700 rounded-xl outline-none transition-all placeholder:text-gray-400">
+                        class="w-full pl-10 pr-4 py-2 text-sm bg-gray-100/80 dark:bg-gray-800/80 border border-transparent focus:border-primary-300 dark:focus:border-primary-700 rounded-xl outline-none transition-all placeholder:text-gray-400"> --}}
                 </div>
 
                 <div class="flex items-center gap-2">

@@ -3,6 +3,7 @@
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\PartyController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TransactionsController;
 use App\Models\Viloyat;
 use Illuminate\Support\Facades\Route;
 
@@ -25,5 +26,6 @@ Route::middleware('auth')->group(function () {
 Route::post('/brand/store', [BrandController::class, 'store'])->name('brand.store');
 
 Route::get('/parties', [PartyController::class, 'index'])->name('parties');
+Route::post('/parties/store', [PartyController::class, 'store'])->name('parties.store');
 
 require __DIR__ . '/auth.php';
