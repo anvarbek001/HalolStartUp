@@ -20,10 +20,11 @@ return new class extends Migration
             $table->text('description');
             $table->bigInteger('order');
             $table->string('image');
+            $table->string('status')->default('inactive');
             $table->bigInteger('uniq_id')->nullable();
-            $table->dateTime('manufactured_at')->nullable(); //ishlab chiqarilgan sana
-            $table->dateTime('expires_at')->nullable(); //yaroqlilik muddati muddati
-            $table->integer('price')->nullable(); //partiyadagi har bitta mahsulotning narxi
+            $table->dateTime('manufactured_at')->nullable();
+            $table->dateTime('expires_at')->nullable(); 
+            $table->integer('price')->nullable(); 
             $table->timestamps();
         });
     }

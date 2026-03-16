@@ -607,7 +607,11 @@
             <div class="nav-links">
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="btn-ghost">Mening panelim</a>
+                        @if (auth()->user()->brand)
+                            <a href="{{ url('/dashboard') }}" class="btn-ghost">Mening panelim</a>
+                        @else
+                            <a href="{{ url('/brandRegister') }}" class="btn-ghost">Mening panelim</a>
+                        @endif
                         @if (auth()->user()->status == 1)
                         @endif
                     @else

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\ProductsImport;
 use App\Models\Brand;
 use App\Models\Party;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Excel;
 
 class PartyController extends Controller
 {
@@ -68,5 +71,70 @@ class PartyController extends Controller
         ]);
 
         return redirect()->route('parties')->with('success', "Partiya qo'shildi");
+    }
+
+    public function shablon(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'id' => 'required'
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json([
+                'success' => false,
+                'errorCode' => 422,
+                'message' => "Foydalanuvchi topilmadi"
+            ]);
+        }
+
+        $path = public_path('storage/shablon/Shablon.xlsx');
+
+        if (!file_exists($path)) {
+            return response()->json([
+                'success' => false,
+                'message' => "Fayl topilmadi"
+            ]);
+        }
+
+        return response()->download($path, 'Shablon.xlsx');
+    }
+
+    public function update(Request $request, Party $party)
+    {
+        $validated = $request->validate([
+            'name'             => 'required|string|max:255',
+            'price'            => 'nullable|numeric|min:0',
+            'rating'           => 'nullable|numeric|min:1|max:5',
+            'description'      => 'required|string',
+            'manufactured_at'  => 'nullable|date',
+            'expires_at'       => 'nullable|date',
+            'image'            => 'nullable|image|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($party->image) Storage::delete($party->image);
+            $validated['image'] = $request->file('image')->store('parties', 'public');
+        }
+
+        $party->update($validated);
+
+        return back()->with('success', 'Partiya muvaffaqiyatli yangilandi!');
+    }
+
+    public function delete($id)
+    {
+        if (!$id) {
+            return redirect()->route('parties')->with('error', "Partya topilmadi");
+        }
+
+        $part = Party::where('id', $id)->with('products')->first();
+        if ($part->user_id != Auth::user()->id) {
+            return redirect()->route('parties')->with('error', "Bu partiya ustida amal bajara olish huquqiga ega emassiz");
+        }
+        if ($part->image) {
+            Storage::delete($part->image);
+        }
+        $part->delete();
+        return redirect()->route('parties')->with('success', "Partiya muvaffaqiyatli o'chirildi");
     }
 }

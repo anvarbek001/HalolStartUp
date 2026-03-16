@@ -15,6 +15,7 @@ class Brand extends Model
         'license',
         'logo',
         'rating',
+        'status',
         'description',
         'order',
     ];

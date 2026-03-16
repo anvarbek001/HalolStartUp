@@ -11,17 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('brands', function (Blueprint $table) {
+        Schema::create('user_balances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('viloyat_id')->constrained('viloyats')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('name')->unique();
-            $table->string('license');
-            $table->string('logo');
-            $table->string('rating')->default('0');
-            $table->text('description');
-            $table->integer('order');
-            $table->string('status')->default('inactive');
+            $table->integer('balance')->default(0);
             $table->timestamps();
         });
     }
@@ -31,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('brands');
+        Schema::dropIfExists('user_balances');
     }
 };

@@ -203,6 +203,17 @@
             background: #111827;
             border-color: #1f2937;
         }
+
+        .product_add_button {
+            font-size: 12px;
+            border: none;
+            outline: none;
+            color: white;
+            padding: 5px;
+            background: linear-gradient(to right, rgb(152, 210, 221), rgb(104, 147, 204));
+            border-radius: 10px;
+            box-shadow: 0 0 4px 1px rgb(73, 193, 240);
+        }
     </style>
 
     {{-- ═══════════════════════════════════════════
@@ -218,6 +229,26 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = ev => this.imagePreview = ev.target.result;
+            reader.readAsDataURL(file);
+        },
+    
+        // TAHRIRLASH MODAL
+        editOpen: false,
+        editLoading: false,
+        editImagePreview: null,
+        editRating: 0,
+        editParty: {},
+        openEdit(party) {
+            this.editParty = { ...party };
+            this.editRating = party.rating || 0;
+            this.editImagePreview = party.image_url || null;
+            this.editOpen = true;
+        },
+        onEditImage(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => this.editImagePreview = ev.target.result;
             reader.readAsDataURL(file);
         }
     }">
@@ -376,7 +407,7 @@
                         </div>
 
                         {{-- Reyting --}}
-                        <div>
+                        {{-- <div>
                             <label
                                 class="block text-xs font-600 text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
                                 Reyting
@@ -391,7 +422,7 @@
                                     class="ml-2 text-xs text-gray-400"></span>
                             </div>
                             <input type="hidden" name="rating" :value="rating || ''">
-                        </div>
+                        </div> --}}
 
                         {{-- Tavsif --}}
                         <div>
@@ -426,6 +457,195 @@
             </div>
         </div>
 
+
+        {{-- ── TAHRIRLASH MODAL Backdrop ── --}}
+        <div x-show="editOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click="editOpen = false"
+            class="modal-overlay" style="display: none;"></div>
+
+        {{-- ── TAHRIRLASH MODAL ── --}}
+        <div x-show="editOpen" x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+            x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+            x-transition:leave-end="opacity-0 scale-95 translate-y-2" @keydown.escape.window="editOpen = false"
+            class="modal-container" style="display: none;">
+
+            <div class="modal-box">
+
+                {{-- Header --}}
+                <div class="modal-header">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-md flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-700 text-gray-900 dark:text-white text-base">Partiyani tahrirlash
+                            </h3>
+                            <p class="text-xs text-gray-400" x-text="'#' + (editParty.uniq_id || '')"></p>
+                        </div>
+                    </div>
+                    <button @click="editOpen = false"
+                        class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                {{-- Form --}}
+                <form :action="'/parties/' + editParty.id" method="POST" enctype="multipart/form-data"
+                    @submit="editLoading = true">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="px-6 py-5 space-y-5">
+
+                        {{-- Rasm --}}
+                        <div>
+                            <label
+                                class="block text-xs font-600 text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                                Partiya rasmi
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 border-2 border-dashed border-gray-200 dark:border-gray-700 flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+                                    <template x-if="editImagePreview">
+                                        <img :src="editImagePreview" class="w-full h-full object-cover">
+                                    </template>
+                                    <template x-if="!editImagePreview">
+                                        <svg class="w-7 h-7 text-gray-300" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </template>
+                                </div>
+                                <label class="flex-1 cursor-pointer">
+                                    <div
+                                        class="border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-center hover:border-amber-400 transition-colors">
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                                            <span class="text-amber-500 font-600">Fayl tanlash</span> yoki bu yerga
+                                            tashlang
+                                        </p>
+                                        <p class="text-xs text-gray-400 mt-0.5">PNG, JPG — max 2MB</p>
+                                    </div>
+                                    <input type="file" name="image" accept="image/*" class="hidden"
+                                        @change="onEditImage($event)">
+                                </label>
+                            </div>
+                        </div>
+
+                        {{-- 2 ustun --}}
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                            {{-- Nomi --}}
+                            <div>
+                                <label
+                                    class="block text-xs font-600 text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                                    Partiya nomi <span class="text-rose-400">*</span>
+                                </label>
+                                <input type="text" name="name" required :value="editParty.name"
+                                    placeholder="Masalan: A-001 Seriya"
+                                    class="w-full px-3 py-2.5 text-sm bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl outline-none focus:border-amber-400 focus:bg-white dark:focus:bg-gray-900 transition-all text-gray-800 dark:text-gray-200 placeholder-gray-400">
+                            </div>
+
+                            {{-- Narx --}}
+                            <div>
+                                <label
+                                    class="block text-xs font-600 text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                                    Birlik narxi
+                                </label>
+                                <div class="relative">
+                                    <input type="number" name="price" min="0" :value="editParty.price"
+                                        placeholder="0"
+                                        class="w-full pl-3 pr-14 py-2.5 text-sm bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl outline-none focus:border-amber-400 focus:bg-white dark:focus:bg-gray-900 transition-all text-gray-800 dark:text-gray-200 placeholder-gray-400">
+                                    <span
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 font-600">so'm</span>
+                                </div>
+                            </div>
+
+                            {{-- Ishlab chiqarilgan --}}
+                            {{-- <div>
+                                <label
+                                    class="block text-xs font-600 text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                                    Ishlab chiqarilgan sana
+                                </label>
+                                <input type="date" name="manufactured_at" :value="editParty.manufactured_at"
+                                    class="w-full px-3 py-2.5 text-sm bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl outline-none focus:border-amber-400 transition-all text-gray-800 dark:text-gray-200">
+                            </div> --}}
+
+                            {{-- Muddat --}}
+                            {{-- <div>
+                                <label
+                                    class="block text-xs font-600 text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                                    Saqlash muddati
+                                </label>
+                                <input type="date" name="expires_at" :value="editParty.expires_at"
+                                    class="w-full px-3 py-2.5 text-sm bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl outline-none focus:border-amber-400 transition-all text-gray-800 dark:text-gray-200">
+                            </div> --}}
+                        </div>
+
+                        {{-- Reyting --}}
+                        {{-- <div>
+                            <label
+                                class="block text-xs font-600 text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+                                Reyting
+                            </label>
+                            <div class="flex items-center gap-1">
+                                <template x-for="star in [1,2,3,4,5]">
+                                    <button type="button" @click="editRating = star"
+                                        :class="star <= editRating ? 'text-amber-400' : 'text-gray-200 dark:text-gray-700'"
+                                        class="text-2xl transition-colors hover:text-amber-300 focus:outline-none">★</button>
+                                </template>
+                                <span x-text="editRating > 0 ? editRating + ' / 5' : 'Tanlanmagan'"
+                                    class="ml-2 text-xs text-gray-400"></span>
+                            </div>
+                            <input type="hidden" name="rating" :value="editRating || ''">
+                        </div> --}}
+
+                        {{-- Tavsif --}}
+                        <div>
+                            <label
+                                class="block text-xs font-600 text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
+                                Tavsif <span class="text-rose-400">*</span>
+                            </label>
+                            <textarea name="description" rows="3" required :value="editParty.description"
+                                placeholder="Partiya haqida qisqacha ma'lumot..."
+                                class="w-full px-3 py-2.5 text-sm bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl outline-none focus:border-amber-400 focus:bg-white dark:focus:bg-gray-900 transition-all text-gray-800 dark:text-gray-200 placeholder-gray-400 resize-none"
+                                x-text="editParty.description"></textarea>
+                        </div>
+
+                    </div>
+
+                    {{-- Footer --}}
+                    <div class="modal-footer">
+                        <button type="button" @click="editOpen = false"
+                            class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
+                            Bekor qilish
+                        </button>
+                        <button type="submit" :disabled="editLoading"
+                            class="flex items-center gap-2 px-5 py-2.5 text-sm font-600 text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 rounded-xl shadow-lg shadow-amber-500/25 transition-all disabled:opacity-60 disabled:cursor-not-allowed">
+                            <svg x-show="editLoading" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4" />
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                            </svg>
+                            <span x-text="editLoading ? 'Saqlanmoqda...' : 'Saqlash'"></span>
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
         {{-- ═══════════════════════════════════════════
              PAGE CONTENT
         ═══════════════════════════════════════════ --}}
@@ -438,10 +658,27 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Xush kelibsiz! Bugungi holat quyida.</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button @click="open = true"
-                        class="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-600 dark:text-gray-300 hover:border-primary-400 transition-all">
-                        + Partiya
+                    <button
+                        class="download_shablon px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-600 dark:text-gray-300 hover:border-primary-400 transition-all">
+                        Shablon⬇️
                     </button>
+                    @if (auth()->user()->brand->status == 'active')
+                        <button @click="open = true"
+                            class="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-600 dark:text-gray-300 hover:border-primary-400 transition-all">
+                            + Partiya
+                        </button>
+                    @else
+                        <button id="brand_dontactive"
+                            class="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-600 dark:text-gray-300 hover:border-primary-400 transition-all">
+                            + Partiya
+                        </button>
+                    @endif
+                    <script>
+                        const downloadShablon = document.querySelector('.download_shablon');
+                        downloadShablon.addEventListener('click', () => {
+                            window.location.href = '/download/shablon?id={{ Auth::user()->id }}';
+                        });
+                    </script>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -528,6 +765,106 @@
                                                 <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
                                                 {{ $statusLbl }}
                                             </span>
+
+                                            @if (auth()->user()->brand->status == 'active' && $party->products->isEmpty())
+                                                <button command="show-modal" commandfor="dialog"
+                                                    class="product_add_button rounded-md bg-white/10 px-2.5 py-1.5 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">Mahsulot+</button>
+                                            @endif
+                                            <el-dialog>
+                                                <dialog id="dialog" aria-labelledby="dialog-title"
+                                                    class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
+                                                    <el-dialog-backdrop
+                                                        class="fixed inset-0 bg-gray-900/50 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"></el-dialog-backdrop>
+
+                                                    <div tabindex="0"
+                                                        class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0">
+                                                        <el-dialog-panel
+                                                            class="relative transform overflow-hidden rounded-lg bg-gray-800 text-left shadow-xl outline -outline-offset-1 outline-white/10 transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95">
+                                                            <form action="{{ route('products.import') }}"
+                                                                enctype="multipart/form-data" method="POST">
+                                                                @csrf
+                                                                <div class="bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                                                    <div class="sm:flex sm:items-start">
+                                                                        <div
+                                                                            class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-500/10 sm:mx-0 sm:size-10">
+                                                                            <svg viewBox="0 0 24 24" fill="none"
+                                                                                stroke="currentColor" stroke-width="1.5"
+                                                                                data-slot="icon" aria-hidden="true"
+                                                                                class="size-6 text-red-400">
+                                                                                <path
+                                                                                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+                                                                                    stroke-linecap="round"
+                                                                                    stroke-linejoin="round" />
+                                                                            </svg>
+                                                                        </div>
+                                                                        <div
+                                                                            class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                                                            <h3 id="dialog-title"
+                                                                                class="text-base font-semibold text-white">
+                                                                                Excel fayl tanlang</h3>
+                                                                            <div class="mt-2">
+                                                                                <input type="file" name="file"
+                                                                                    accept=".xlsx,.xls" required>
+                                                                                <input type="hidden" name="party_id"
+                                                                                    value="{{ $party->id }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div
+                                                                    class="bg-gray-700/25 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                                                    <button type="submit" command="close"
+                                                                        commandfor="dialog"
+                                                                        class="inline-flex w-full justify-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white hover:bg-red-400 sm:ml-3 sm:w-auto">Saqlash</button>
+                                                                    <button type="button" command="close"
+                                                                        commandfor="dialog"
+                                                                        class="mt-3 inline-flex w-full justify-center rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20 sm:mt-0 sm:w-auto">Orqaga</button>
+                                                                </div>
+                                                            </form>
+                                                        </el-dialog-panel>
+                                                    </div>
+                                                </dialog>
+                                            </el-dialog>
+
+                                            @if (auth()->user()->brand->status == 'active')
+                                                <button class="product_add_button" type="button"
+                                                    @click="openEdit({
+                                                    id: {{ $party->id }},
+                                                    uniq_id: '{{ $party->uniq_id }}',
+                                                    name: '{{ addslashes($party->name) }}',
+                                                    price: '{{ $party->price }}',
+                                                    rating: {{ $party->rating ?? 0 }},
+                                                    description: '{{ addslashes($party->description) }}',
+                                                    manufactured_at: '{{ $party->manufactured_at ? \Carbon\Carbon::parse($party->manufactured_at)->format('Y-m-d') : '' }}',
+                                                    expires_at: '{{ $party->expires_at ? \Carbon\Carbon::parse($party->expires_at)->format('Y-m-d') : '' }}',
+                                                    image_url: '{{ $party->image ? Storage::url($party->image) : '' }}'
+                                                })">
+                                                    <svg width="18" height="18" viewBox="0 0 24 24"
+                                                        fill="none" stroke="currentColor">
+                                                        <path d="M12 20h9" />
+                                                        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                                                    </svg>
+                                                </button>
+                                                <form action="{{ route('party.delete', $party->id) }}" method="POST"
+                                                    onsubmit="return confirm('Tasdiqlaysizmi')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="product_add_button">
+                                                        <svg width="18" height="18" viewBox="0 0 24 24"
+                                                            fill="none" stroke="currentColor" stroke-width="2"
+                                                            stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M3 6h18" />
+                                                            <path d="M8 6V4h8v2" />
+                                                            <path d="M19 6l-1 14H6L5 6" />
+                                                            <path d="M10 11v6" />
+                                                            <path d="M14 11v6" />
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                                <button class="product_add_button">
+                                                    faollashtirish
+                                                </button>
+                                            @endif
                                         </div>
                                         @if ($party->rating)
                                             <div class="flex items-center gap-1 mt-1">
@@ -838,4 +1175,9 @@
         }
     </script>
 
+    <script>
+        document.getElementById('brand_dontactive').addEventListener('click', () => {
+            alert('Brandingiz admin tomonidan tekshiruvda,tez orada jarayon aktivlashadi.')
+        })
+    </script>
 @endsection

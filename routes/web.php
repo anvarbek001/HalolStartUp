@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\PartyController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionsController;
 use App\Models\Viloyat;
@@ -27,5 +29,14 @@ Route::post('/brand/store', [BrandController::class, 'store'])->name('brand.stor
 
 Route::get('/parties', [PartyController::class, 'index'])->name('parties');
 Route::post('/parties/store', [PartyController::class, 'store'])->name('parties.store');
+Route::put('/parties/{party}', [PartyController::class, 'update'])->name('parties.update');
+Route::delete('/party/delete/{id}', [PartyController::class, 'delete'])->name('party.delete');
+Route::get('/download/shablon', [PartyController::class, 'shablon'])->name('download.shablon');
+
+Route::post('/products/import', [ProductController::class, 'import'])->name('products.import');
+
+Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+Route::patch('/admin/brand/{brand}/status', [AdminController::class, 'updateBrandStatus'])
+    ->name('admin.brand.status');
 
 require __DIR__ . '/auth.php';

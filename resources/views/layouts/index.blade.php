@@ -275,7 +275,7 @@
                     </div>
                     <span x-show="sidebarOpen" x-transition:enter="transition ease-out duration-200"
                         x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                        class="font-display font-800 text-lg gradient-text whitespace-nowrap">AdminPro</span>
+                        class="font-display font-800 text-lg gradient-text whitespace-nowrap">HalolAdmin</span>
                 </div>
             </div>
 
@@ -364,7 +364,10 @@
 
                 <!-- Search -->
                 <div class="search_box max-w-md relative">
-                    <div style="">Hisobingizda: <strong>40.000.000</strong> uzs</div>
+                    <div style="">Hisobingizda:
+                        <strong>{{ number_format(auth()->user()->userBalance->balance ?? 0, 0, '.', ' ') }}</strong>
+                        uzs
+                    </div>
 
                     <div x-data="{ open: false, amount: '', loading: false }">
 
@@ -452,11 +455,6 @@
                     </div>
                     <input type="text" placeholder="Qidirish..."
                         class="w-full pl-10 pr-4 py-2 text-sm bg-gray-100/80 dark:bg-gray-800/80 border border-transparent focus:border-primary-300 dark:focus:border-primary-700 rounded-xl outline-none transition-all placeholder:text-gray-400"> --}}
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <h3 class="font-display font-700 text-sm">Sizning qr Id kodingiz:</h3>
-                    <strong>{{ Auth()->user()->id . Auth()->user()->brand->id }}</strong>
                 </div>
 
                 <div class="flex items-center gap-2 ml-auto">
@@ -562,6 +560,18 @@
                                 d="M20 7l-8-4-8 4m16 0v10l-8 4m8-14l-8 4m0 0L4 7m8 4v10"/>
                             </svg>`
                     },
+                    @if (auth()->user()->name === 'adminstrator')
+                        {
+                            id: 'admin',
+                            label: 'Admin',
+                            route: '{{ route('admin') }}',
+                            icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 20a6 6 0 0112 0"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11l2 2 4-4"/>
+                            </svg>`
+                        },
+                    @endif
                 ],
 
                 systemItems: [
