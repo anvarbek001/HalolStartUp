@@ -734,6 +734,7 @@
                     $productCnt = $party->products->count();
                     $scanCnt = $party->products->sum('scan_count');
                     $scanPct = $productCnt > 0 ? min(100, round(($scanCnt / ($productCnt * 10)) * 100)) : 0;
+                    $dialogId = 'dialog-' . $party->id;
                 @endphp
 
                 <div class="party-card bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm animate-fade-in"
@@ -767,11 +768,11 @@
                                             </span>
 
                                             @if (auth()->user()->brand->status == 'active' && $party->products->isEmpty())
-                                                <button command="show-modal" commandfor="dialog"
+                                                <button command="show-modal" commandfor={{ $dialogId }}
                                                     class="product_add_button rounded-md bg-white/10 px-2.5 py-1.5 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">Mahsulot+</button>
                                             @endif
                                             <el-dialog>
-                                                <dialog id="dialog" aria-labelledby="dialog-title"
+                                                <dialog id={{ $dialogId }} aria-labelledby="dialog-title"
                                                     class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
                                                     <el-dialog-backdrop
                                                         class="fixed inset-0 bg-gray-900/50 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in"></el-dialog-backdrop>
@@ -814,10 +815,10 @@
                                                                 <div
                                                                     class="bg-gray-700/25 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                                                     <button type="submit" command="close"
-                                                                        commandfor="dialog"
+                                                                        commandfor={{ $dialogId }}
                                                                         class="inline-flex w-full justify-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white hover:bg-red-400 sm:ml-3 sm:w-auto">Saqlash</button>
                                                                     <button type="button" command="close"
-                                                                        commandfor="dialog"
+                                                                        commandfor={{ $dialogId }}
                                                                         class="mt-3 inline-flex w-full justify-center rounded-md bg-white/10 px-3 py-2 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20 sm:mt-0 sm:w-auto">Orqaga</button>
                                                                 </div>
                                                             </form>
@@ -861,9 +862,11 @@
                                                         </svg>
                                                     </button>
                                                 </form>
-                                                <button class="product_add_button">
-                                                    faollashtirish
-                                                </button>
+                                                @if (!$party->product)
+                                                    <button class="product_add_button">
+                                                        faollashtirish
+                                                    </button>
+                                                @endif
                                             @endif
                                         </div>
                                         @if ($party->rating)

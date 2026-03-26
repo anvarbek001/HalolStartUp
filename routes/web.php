@@ -34,9 +34,11 @@ Route::delete('/party/delete/{id}', [PartyController::class, 'delete'])->name('p
 Route::get('/download/shablon', [PartyController::class, 'shablon'])->name('download.shablon');
 
 Route::post('/products/import', [ProductController::class, 'import'])->name('products.import');
+Route::post('/products/check', [ProductController::class, 'check'])->name('products.check');
 
 Route::get('/admin', [AdminController::class, 'index'])->name('admin');
 Route::patch('/admin/brand/{brand}/status', [AdminController::class, 'updateBrandStatus'])
     ->name('admin.brand.status');
+
 
 require __DIR__ . '/auth.php';

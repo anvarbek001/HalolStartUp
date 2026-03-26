@@ -55,6 +55,15 @@ class User extends Authenticatable
         return $this->hasOne(Brand::class);
     }
 
+    public function brandStatus()
+    {
+        if ($this->brand->status == 'active') {
+            return '✅faol';
+        } elseif ($this->brand->status == 'inactive') {
+            return '⚪nofaol';
+        }
+    }
+
     public function getUserBrand()
     {
         return $this->brands()->where('user_id', Auth()->user->id)->first();

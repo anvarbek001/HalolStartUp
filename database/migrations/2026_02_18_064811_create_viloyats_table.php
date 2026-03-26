@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('viloyats', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('name_ru');
+            $table->string('name_eng');
             $table->integer('order');
             $table->timestamps();
         });

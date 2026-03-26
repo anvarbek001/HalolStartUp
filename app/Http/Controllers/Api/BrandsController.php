@@ -17,6 +17,7 @@ class BrandsController extends Controller
                 'rating' => $brand->rating,
                 'license' => $brand->license ? asset('storage/' . $brand->license) : null,
                 'logo'    => $brand->logo ? asset('storage/' . $brand->logo) : null,
+                'description' => $brand->description
             ];
         });
 

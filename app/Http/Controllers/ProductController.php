@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Imports\ProductsImport;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
@@ -25,5 +27,30 @@ class ProductController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('parties')->with('error', "Serverda xatolik");
         }
+    }
+
+    public function check(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'qrcode' => 'required'
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json([
+                'success' => false,
+            ], 422);
+        }
+
+        $product = Product::where('qrcode_number', $request->qrcode)->first();
+
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+        ], 200);
     }
 }

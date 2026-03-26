@@ -363,15 +363,15 @@
                 </button>
 
                 <!-- Search -->
-                <div class="search_box max-w-md relative">
+                <div class="search_box max-w-lg relative">
                     <div style="">Hisobingizda:
                         <strong>{{ number_format(auth()->user()->userBalance->balance ?? 0, 0, '.', ' ') }}</strong>
-                        uzs
+                        uzs |
                     </div>
 
                     <div x-data="{ open: false, amount: '', loading: false }">
 
-                        <button @click="open = true" class="click_logo">Hisobni to'ldirish</button>
+                        <button @click="open = true" class="click_logo">Hisobni to'ldirish</button> |
 
                         <!-- Backdrop -->
                         <div x-show="open" @click="open = false"
@@ -446,6 +446,10 @@
                                 </p>
                             </div>
                         </div>
+                    </div>
+
+                    <div>
+                        Brend holadi: {{ auth()->user()->brandStatus() }}
                     </div>
                     {{-- <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

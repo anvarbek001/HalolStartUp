@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('viloyat_id')->constrained('viloyats')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
+            $table->string('name_ru');
+            $table->string('name_eng');
             $table->integer('order');
             $table->timestamps();
         });

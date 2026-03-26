@@ -639,7 +639,7 @@
             <h2>📦 Mahsulotni tekshirish</h2>
             <p>Mahsulot qopqog'i yoki yorliqda yozilgan serial raqamni kiriting.</p>
             <div class="input-group">
-                <input type="text" id="serialInput" class="serial-input" placeholder="HLB-2024-XXXXXX" maxlength="20"
+                <input type="text" id="serialInput" class="serial-input" placeholder="12345678901234" maxlength="20"
                     autocomplete="off">
                 <button class="verify-btn" onclick="checkSerial()" id="verifyBtn">
                     <span class="btn-txt">Tekshirish</span>
@@ -648,7 +648,7 @@
             </div>
             <div class="hints">
                 <span class="hint-label">Demo:</span>
-                <span class="hint-chip" onclick="fillDemo('HLB-2024-A1B2C3')">HLB-2024-A1B2C3 ✅</span>
+                <span class="hint-chip" onclick="fillDemo('12345678901234')">12345678901234 ✅</span>
                 <span class="hint-chip" onclick="fillDemo('FAKE-0000-000000')">FAKE-0000 ❌</span>
             </div>
             <div class="result-box success" id="resultSuccess">
@@ -658,8 +658,8 @@
                     <div class="result-desc">Ushbu mahsulot Halol brendining rasmiy mahsuloti hisoblanadi.</div>
                     <div class="result-meta">
                         <span class="meta-tag">🏭 O'zbekiston</span>
-                        <span class="meta-tag">📅 Muddati: 2026</span>
-                        <span class="meta-tag">🕌 Halol sertifikat</span>
+                        {{-- <span class="meta-tag">📅 Muddati: 2026</span> --}}
+                        {{-- <span class="meta-tag">🕌 Halol sertifikat</span> --}}
                     </div>
                 </div>
             </div>
@@ -788,7 +788,7 @@
     </footer>
 
     <script>
-        const validSerials = ['HLB-2024-A1B2C3', 'HLB-2025-Z4W9P2', 'HLB-2024-001234', 'HLB-2025-ABCDEF'];
+        const validSerials = ['12345678901234', 'HLB-2025-Z4W9P2', 'HLB-2024-001234', 'HLB-2025-ABCDEF'];
 
         function fillDemo(val) {
             document.getElementById('serialInput').value = val;
@@ -814,7 +814,25 @@
             btn.classList.add('loading');
             btn.disabled = true;
 
-            // 🔁 Bu yerda real API chaqiruvini qo'shing: fetch('/api/verify', {...})
+            fetch('/products/check', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: {
+                    qrcode: val
+                }
+            }).then(res => res.json()).then(data => {
+                if (data.success) {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    document.getElementById('resultSuccess').classList.add('visible');
+                } else {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    document.getElementById('resultError').classList.add('visible');
+                }
+            })
             setTimeout(() => {
                 const isValid = validSerials.includes(val) || /^HLB-20\d{2}-[A-Z0-9]{6}$/.test(val);
                 btn.classList.remove('loading');
