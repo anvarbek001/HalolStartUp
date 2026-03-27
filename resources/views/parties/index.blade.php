@@ -863,10 +863,18 @@
                                                     </button>
                                                 </form>
                                                 @if (!$party->product)
-                                                    <button class="product_add_button">
-                                                        faollashtirish
-                                                    </button>
+                                                    <form
+                                                        action="{{ route('party.activated', ['party_id' => $party->id]) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        <button class="product_add_button">
+                                                            {!! $party->partyStatusBtn() !!}
+                                                        </button>
+                                                    </form>
                                                 @endif
+                                                <span>
+                                                    {!! $party->partyStatus() !!}
+                                                </span>
                                             @endif
                                         </div>
                                         @if ($party->rating)
@@ -1077,7 +1085,7 @@
                 </div>
                 <div class="flex-1">
                     <p class="font-display text-sm font-600" style="color:#10b981;">Muvaffaqiyatli!</p>
-                    <p class="text-xs mt-0.5" style="color:rgba(255,255,255,0.5);">{{ session('success') }}</p>
+                    <p class="text-xs mt-0.5" style="color:rgba(24, 23, 23, 0.5);">{{ session('success') }}</p>
                 </div>
                 <button onclick="this.closest('.toast-item').remove()" class="text-xs transition-colors"
                     style="color:rgba(255,255,255,0.25);">✕</button>
@@ -1096,7 +1104,7 @@
                 </div>
                 <div class="flex-1">
                     <p class="font-display text-sm font-600" style="color:#f87171;">Xatolik!</p>
-                    <p class="text-xs mt-0.5" style="color:rgba(255,255,255,0.5);">{{ session('error') }}</p>
+                    <p class="text-xs mt-0.5" style="color:rgba(24, 23, 23, 0.5);">{{ session('error') }}</p>
                 </div>
                 <button onclick="this.closest('.toast-item').remove()" class="text-xs transition-colors"
                     style="color:rgba(255,255,255,0.25);">✕</button>
@@ -1116,10 +1124,10 @@
                 </div>
                 <div class="flex-1">
                     <p class="font-display text-sm font-600" style="color:#f87171;">Xatoliklar mavjud</p>
-                    <p class="text-xs mt-0.5" style="color:rgba(255,255,255,0.5);">{{ $errors->first() }}</p>
+                    <p class="text-xs mt-0.5" style="color:rgba(24, 23, 23, 0.5);">{{ $errors->first() }}</p>
                 </div>
                 <button onclick="this.closest('.toast-item').remove()" class="text-xs"
-                    style="color:rgba(255,255,255,0.25);">✕</button>
+                    style="color:rgba(24, 23, 23, 0.5);">✕</button>
             </div>
         @endif
     </div>

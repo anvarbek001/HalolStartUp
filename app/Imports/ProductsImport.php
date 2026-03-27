@@ -2,7 +2,9 @@
 
 namespace App\Imports;
 
+use App\Models\Party;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -13,6 +15,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class ProductsImport implements ToCollection, WithHeadingRow, WithChunkReading
 {
     protected int $party_id;
+    public string $errorMessage;
 
     public function __construct(int $party_id)
     {

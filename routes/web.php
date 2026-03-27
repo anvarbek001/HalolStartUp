@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
 Route::post('/brand/store', [BrandController::class, 'store'])->name('brand.store');
 
 Route::get('/parties', [PartyController::class, 'index'])->name('parties');
+Route::post('/parties/activated/{party_id}', [PartyController::class, 'activated'])->name('party.activated');
 Route::post('/parties/store', [PartyController::class, 'store'])->name('parties.store');
 Route::put('/parties/{party}', [PartyController::class, 'update'])->name('parties.update');
 Route::delete('/party/delete/{id}', [PartyController::class, 'delete'])->name('party.delete');

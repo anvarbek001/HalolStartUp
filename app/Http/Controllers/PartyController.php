@@ -137,4 +137,21 @@ class PartyController extends Controller
         $part->delete();
         return redirect()->route('parties')->with('success', "Partiya muvaffaqiyatli o'chirildi");
     }
+
+    public function activated(Request $request, $party_id)
+    {
+        $party = Party::where('id', $party_id)->first();
+
+        if ($party->user_id !== Auth::user()->id) {
+            abort(403, "Ruxsat yo'q");
+        }
+
+        if ($party->status == 'inactive') {
+            $party->status = 'active';
+        } elseif ($party->status == 'active') {
+            $party->status = 'inactive';
+        }
+        $party->save();
+        return back()->with('success', 'Partiya faollashtirildi');
+    }
 }

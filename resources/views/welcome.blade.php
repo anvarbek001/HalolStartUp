@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Halol — Mahsulot Autentifikatsiyasi</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
@@ -817,11 +818,12 @@
             fetch('/products/check', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
-                body: {
+                body: JSON.stringify({
                     qrcode: val
-                }
+                })
             }).then(res => res.json()).then(data => {
                 if (data.success) {
                     btn.classList.remove('loading');
@@ -833,12 +835,6 @@
                     document.getElementById('resultError').classList.add('visible');
                 }
             })
-            setTimeout(() => {
-                const isValid = validSerials.includes(val) || /^HLB-20\d{2}-[A-Z0-9]{6}$/.test(val);
-                btn.classList.remove('loading');
-                btn.disabled = false;
-                document.getElementById(isValid ? 'resultSuccess' : 'resultError').classList.add('visible');
-            }, 800);
         }
 
         document.getElementById('serialInput').addEventListener('keydown', e => {

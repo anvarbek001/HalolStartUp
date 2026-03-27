@@ -36,4 +36,22 @@ class Party extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function partyStatus()
+    {
+        if ($this->status == 'inactive') {
+            return '<span style="color:red;">Nofaol</span>';
+        } elseif ($this->status == 'active') {
+            return '<span style="color:green;">Faol</span>';
+        }
+    }
+
+    public function partyStatusBtn()
+    {
+        if ($this->status == 'inactive') {
+            return '<span style="color:green;">faollashtirish</span>';
+        } elseif ($this->status == 'active') {
+            return '<span style="color:red;">nofaollashtirish</span>';
+        }
+    }
 }

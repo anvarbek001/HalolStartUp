@@ -49,6 +49,15 @@ class ProductController extends Controller
             ], 400);
         }
 
+        if ($product->party->status == 'inactive') {
+            return response()->json([
+                'success' => false,
+            ], 400);
+        }
+
+        $product->scan_count += 1;
+        $product->save();
+
         return response()->json([
             'success' => true,
         ], 200);
