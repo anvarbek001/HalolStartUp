@@ -148,10 +148,12 @@ class PartyController extends Controller
 
         if ($party->status == 'inactive') {
             $party->status = 'active';
+            $party->save();
+            return back()->with('success', 'Partiya faollashtirildi');
         } elseif ($party->status == 'active') {
             $party->status = 'inactive';
+            $party->save();
+            return back()->with('success', 'Partiya faolsizlantirildi');
         }
-        $party->save();
-        return back()->with('success', 'Partiya faollashtirildi');
     }
 }

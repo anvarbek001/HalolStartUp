@@ -60,6 +60,11 @@ class ProductController extends Controller
 
         return response()->json([
             'success' => true,
+            'party_name' => $product->party->name,
+            'rating' => $product->party->rating,
+            'description' => $product->party->description,
+            'image' => asset('storage/logos/' . $product->party->image),
+            'price' => $product->party->price
         ], 200);
     }
 }

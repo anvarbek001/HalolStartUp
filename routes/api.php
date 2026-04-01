@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\BrandsController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,3 +23,5 @@ Route::prefix('customer')->middleware('auth:sanctum')->group(function () {
 Route::prefix('brands')->group(function () {
     Route::get('/index', [BrandsController::class, 'index']);
 });
+
+Route::post('/products/check', [ProductController::class, 'check'])->name('products.check');

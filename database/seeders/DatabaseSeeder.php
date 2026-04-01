@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Product;
 use App\Models\User;
+use Database\Factories\ProductFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -20,12 +22,15 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ViloyatSeeder::class,
             TumanSeeder::class,
-            UserSeeder::class
+            UserSeeder::class,
+            BrandSeeder::class,
+            PartiesSeeder::class,
+            ProductsSeeder::class
         ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
     }
 }

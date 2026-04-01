@@ -3,7 +3,7 @@
 
     <style>
         .user-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             overflow: hidden;
         }
@@ -57,9 +57,9 @@
         }
 
         .status-inactive {
-            background: rgba(107, 114, 128, 0.1);
+            background: rgba(107, 114, 128, 0.10);
             color: #6b7280;
-            border-color: rgba(107, 114, 128, 0.2);
+            border-color: rgba(107, 114, 128, 0.20);
         }
 
         .status-pending {
@@ -69,9 +69,9 @@
         }
 
         .status-blocked {
-            background: rgba(239, 68, 68, 0.1);
+            background: rgba(239, 68, 68, 0.10);
             color: #dc2626;
-            border-color: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.20);
         }
 
         .avatar-ring {
@@ -128,25 +128,33 @@
             background: rgba(92, 124, 250, 0.15);
         }
 
-        .expand-row {
+        .expand-panel {
             display: none;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        .expand-row.open {
-            display: table-row;
-            animation: fadeIn 0.25s ease forwards;
+        .dark .expand-panel {
+            border-top-color: rgba(255, 255, 255, 0.06);
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-4px);
-            }
+        .expand-panel.is-open {
+            display: block;
+        }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .chevron {
+            transition: transform 0.3s ease;
+        }
+
+        .chevron.rotated {
+            transform: rotate(180deg);
+        }
+
+        .search-input {
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 3px rgba(92, 124, 250, 0.15);
         }
 
         .toast-pop {
@@ -164,351 +172,280 @@
                 transform: translateX(0) scale(1);
             }
         }
-
-        .search-input {
-            transition: all 0.2s ease;
-        }
-
-        .search-input:focus {
-            box-shadow: 0 0 0 3px rgba(92, 124, 250, 0.15);
-        }
     </style>
 
-    <div x-data="{ searchQ: '' }">
-
-        {{-- ══════════ HEADING ══════════ --}}
-        <div class="mb-8 animate-fade-in">
-            <div class="flex items-center justify-between flex-wrap gap-4">
-                <div>
-                    <h1 class="font-display text-2xl font-700 text-gray-900 dark:text-white">Foydalanuvchilar</h1>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        Jami <strong class="text-gray-700 dark:text-gray-200">{{ $users->count() }}</strong> ta
-                        foydalanuvchi
-                    </p>
+    {{-- ══════════ HEADING ══════════ --}}
+    <div class="mb-8 animate-fade-in">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+            <div>
+                <h1 class="font-display text-2xl font-700 text-gray-900 dark:text-white">Foydalanuvchilar</h1>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    Jami <strong class="text-gray-700 dark:text-gray-200">{{ $users->count() }}</strong> ta foydalanuvchi
+                </p>
+            </div>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
                 </div>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </div>
-                    <input type="text" x-model="searchQ" placeholder="Qidirish..."
-                        class="search-input pl-9 pr-4 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl outline-none focus:border-primary-400 transition-all w-56 text-gray-700 dark:text-gray-200">
-                </div>
+                <input type="text" id="searchInput" placeholder="Qidirish..."
+                    class="search-input pl-9 pr-4 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl outline-none focus:border-primary-400 transition-all w-56 text-gray-700 dark:text-gray-200">
             </div>
         </div>
+    </div>
 
-        {{-- ══════════ STATS ══════════ --}}
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 animate-fade-in">
-            @php
-                $totalBrands = $users->filter(fn($u) => $u->brand)->count();
-                $activeBrands = $users->filter(fn($u) => $u->brand?->status === 'active')->count();
-                $pendingBrands = $users->filter(fn($u) => $u->brand?->status === 'pending')->count();
-                $blockedBrands = $users->filter(fn($u) => $u->brand?->status === 'blocked')->count();
-            @endphp
+    {{-- ══════════ STATS ══════════ --}}
+    @php
+        $totalBrands = $users->filter(fn($u) => $u->brand)->count();
+        $activeBrands = $users->filter(fn($u) => $u->brand?->status === 'active')->count();
+        $pendingBrands = $users->filter(fn($u) => $u->brand?->status === 'pending')->count();
+    @endphp
 
-            @foreach ([['label' => 'Jami foydalanuvchi', 'value' => $users->count(), 'gradient' => 'from-primary-400 to-primary-600', 'path' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'], ['label' => 'Brandlar', 'value' => $totalBrands, 'gradient' => 'from-violet-400 to-violet-600', 'path' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'], ['label' => 'Faol brandlar', 'value' => $activeBrands, 'gradient' => 'from-emerald-400 to-emerald-600', 'path' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'], ['label' => 'Kutilmoqda', 'value' => $pendingBrands, 'gradient' => 'from-amber-400 to-amber-600', 'path' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z']] as $s)
-                <div
-                    class="bg-white dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-800 shadow-sm">
-                    <div class="flex items-center gap-3">
-                        <div
-                            class="w-10 h-10 rounded-xl bg-gradient-to-br {{ $s['gradient'] }} flex items-center justify-center shadow-md flex-shrink-0">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="{{ $s['path'] }}" />
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-400 dark:text-gray-500">{{ $s['label'] }}</p>
-                            <p class="font-display text-xl font-700 text-gray-900 dark:text-white">{{ $s['value'] }}</p>
-                        </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 animate-fade-in">
+        @foreach ([['label' => 'Jami foydalanuvchi', 'value' => $users->count(), 'gradient' => 'from-primary-400 to-primary-600', 'path' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z'], ['label' => 'Brandlar', 'value' => $totalBrands, 'gradient' => 'from-violet-400 to-violet-600', 'path' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'], ['label' => 'Faol brandlar', 'value' => $activeBrands, 'gradient' => 'from-emerald-400 to-emerald-600', 'path' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'], ['label' => 'Kutilmoqda', 'value' => $pendingBrands, 'gradient' => 'from-amber-400 to-amber-600', 'path' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z']] as $s)
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-4 border border-gray-100 dark:border-gray-800 shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-gradient-to-br {{ $s['gradient'] }} flex items-center justify-center shadow-md flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $s['path'] }}" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 dark:text-gray-500">{{ $s['label'] }}</p>
+                        <p class="font-display text-xl font-700 text-gray-900 dark:text-white">{{ $s['value'] }}</p>
                     </div>
                 </div>
-            @endforeach
-        </div>
+            </div>
+        @endforeach
+    </div>
 
-        {{-- ══════════ USERS LIST ══════════ --}}
-        <div class="space-y-4" id="usersList">
-            @forelse($users as $index => $user)
-                <div class="user-card bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm animate-fade-in"
-                    style="animation-delay: {{ $index * 0.04 }}s"
-                    x-show="'{{ strtolower($user->name) }}'.includes(searchQ.toLowerCase()) ||
-                      '{{ strtolower($user->email) }}'.includes(searchQ.toLowerCase()) ||
-                      '{{ strtolower($user->brand?->name ?? '') }}'.includes(searchQ.toLowerCase())"
-                    x-data="{
-                        open: false,
-                        status: '{{ $user->brand?->status ?? 'pending' }}',
-                        loading: false,
-                        async changeStatus(brandId, newStatus) {
-                            this.loading = true;
-                            try {
-                                const res = await fetch('/admin/brand/' + brandId + '/status', {
-                                    method: 'PATCH',
-                                    headers: {
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({ status: newStatus })
-                                });
-                                const data = await res.json();
-                                if (data.success) {
-                                    this.status = newStatus;
-                                    showToast('Status yangilandi!', 'success');
-                                } else {
-                                    showToast('Xatolik yuz berdi', 'error');
-                                }
-                            } catch (e) {
-                                showToast('Tarmoq xatoligi', 'error');
-                            }
-                            this.loading = false;
-                        }
-                    }">
+    {{-- ══════════ USERS LIST ══════════ --}}
+    <div class="space-y-4" id="usersList">
+        @forelse($users as $index => $user)
+            <div class="user-card bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm animate-fade-in"
+                style="animation-delay: {{ $index * 0.04 }}s"
+                data-search="{{ strtolower($user->name) }} {{ strtolower($user->email) }} {{ strtolower($user->brand?->name ?? '') }}">
 
-                    <div class="p-5">
-                        <div class="flex items-start gap-4">
+                <div class="p-5">
+                    <div class="flex items-start gap-4">
 
-                            {{-- Avatar --}}
-                            <div class="avatar-ring flex-shrink-0">
-                                {{ strtoupper(substr($user->name, 0, 1)) }}
-                            </div>
+                        {{-- Avatar --}}
+                        <div class="avatar-ring flex-shrink-0">
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        </div>
 
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-start justify-between gap-3 flex-wrap">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-start justify-between gap-3 flex-wrap">
 
-                                    {{-- User info --}}
-                                    <div class="min-w-0">
-                                        <div class="flex items-center gap-2 flex-wrap">
-                                            <h3 class="font-display font-700 text-gray-900 dark:text-white text-base">
-                                                {{ $user->name }}
-                                            </h3>
-                                            @if ($user->brand)
-                                                <span class="stat-chip">
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16" />
-                                                    </svg>
-                                                    {{ $user->brand->name }}
-                                                </span>
-                                            @else
-                                                <span class="text-xs text-gray-400 italic">Brand yo'q</span>
-                                            @endif
-                                        </div>
-                                        <p class="text-xs text-gray-400 mt-0.5">{{ $user->email }}</p>
-                                        <div class="flex items-center gap-3 mt-2 flex-wrap">
+                                {{-- User info --}}
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <h3 class="font-display font-700 text-gray-900 dark:text-white text-base">
+                                            {{ $user->name }}
+                                        </h3>
+                                        @if ($user->brand)
+                                            <span class="stat-chip">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16" />
+                                                </svg>
+                                                {{ $user->brand->name }}
+                                            </span>
+                                        @else
+                                            <span class="text-xs text-gray-400 italic">Brand yo'q</span>
+                                        @endif
+                                    </div>
+                                    <p class="text-xs text-gray-400 mt-0.5">{{ $user->email }}</p>
+                                    <div class="flex items-center gap-3 mt-2 flex-wrap">
+                                        <span class="flex items-center gap-1 text-xs text-gray-400">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                            {{ $user->created_at->format('d.m.Y') }}
+                                        </span>
+                                        @if ($user->brand)
                                             <span class="flex items-center gap-1 text-xs text-gray-400">
                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                                                 </svg>
-                                                {{ $user->created_at->format('d.m.Y') }}
+                                                {{ $user->brand->parties->count() }} partiya
                                             </span>
-                                            @if ($user->brand)
-                                                <span class="flex items-center gap-1 text-xs text-gray-400">
-                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                                    </svg>
-                                                    {{ $user->brand->parties->count() }} partiya
-                                                </span>
-                                                <span class="flex items-center gap-1 text-xs text-gray-400">
-                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                                    </svg>
-                                                    {{ $user->brand->parties->sum(fn($p) => $p->products->count()) }}
-                                                    mahsulot
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-
-                                    {{-- Brand status + actions --}}
-                                    <div class="flex items-center gap-3 flex-shrink-0">
-                                        @if ($user->brand)
-                                            {{-- Status select --}}
-                                            <div class="relative flex items-center gap-2">
-                                                <select x-model="status" :disabled="loading"
-                                                    @change="changeStatus({{ $user->brand->id }}, $event.target.value)"
-                                                    :class="{
-                                                        'status-active': status === 'active',
-                                                        'status-inactive': status === 'inactive',
-                                                        'status-pending': status === 'pending',
-                                                        'status-blocked': status === 'blocked',
-                                                    }"
-                                                    class="status-select">
-                                                    <option value="active">✅ Faol</option>
-                                                    <option value="inactive">⚪ Nofaol</option>
-                                                    <option value="pending">⏳ Kutilmoqda</option>
-                                                    <option value="blocked">🚫 Bloklangan</option>
-                                                </select>
-                                                {{-- Loading spinner --}}
-                                                <svg x-show="loading"
-                                                    class="w-4 h-4 animate-spin text-gray-400 flex-shrink-0"
-                                                    fill="none" viewBox="0 0 24 24">
-                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
-                                                        stroke="currentColor" stroke-width="4" />
-                                                    <path class="opacity-75" fill="currentColor"
-                                                        d="M4 12a8 8 0 018-8v8z" />
-                                                </svg>
-                                            </div>
-                                        @endif
-
-                                        {{-- Expand button --}}
-                                        @if ($user->brand)
-                                            <button @click="open = !open"
-                                                class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-600 text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 rounded-xl hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors">
-                                                <span x-text="open ? 'Yopish' : 'Batafsil'">Batafsil</span>
-                                                <svg class="w-3.5 h-3.5 transition-transform duration-300"
-                                                    :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor"
+                                            <span class="flex items-center gap-1 text-xs text-gray-400">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M19 9l-7 7-7-7" />
+                                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                                 </svg>
-                                            </button>
+                                                {{ $user->brand->parties->sum(fn($p) => $p->products->count()) }} mahsulot
+                                            </span>
                                         @endif
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    {{-- ── EXPAND: Brand detail ── --}}
-                    @if ($user->brand)
-                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
-                            x-transition:enter-start="opacity-0 -translate-y-2"
-                            x-transition:enter-end="opacity-100 translate-y-0"
-                            x-transition:leave="transition ease-in duration-150"
-                            x-transition:leave-start="opacity-100 translate-y-0"
-                            x-transition:leave-end="opacity-0 -translate-y-2"
-                            class="border-t border-gray-50 dark:border-gray-800" style="display:none">
-
-                            <div class="p-5 space-y-5">
-
-                                {{-- Brand card --}}
-                                <div class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
-                                    @if ($user->brand->logo)
-                                        <img src="{{ Storage::url($user->brand->logo) }}" class="brand-logo"
-                                            alt="">
-                                    @else
-                                        <div class="brand-logo-placeholder">
-                                            <svg class="w-4 h-4 text-primary-400" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16" />
+                                {{-- Actions --}}
+                                <div class="flex items-center gap-3 flex-shrink-0">
+                                    @if ($user->brand)
+                                        {{-- Status select --}}
+                                        <div class="relative flex items-center gap-2">
+                                            <select class="status-select status-{{ $user->brand->status }}"
+                                                data-brand-id="{{ $user->brand->id }}" onchange="changeStatus(this)">
+                                                <option value="active" @selected($user->brand->status === 'active')>✅ Faol</option>
+                                                <option value="inactive" @selected($user->brand->status === 'inactive')>⚪ Nofaol</option>
+                                                <option value="pending" @selected($user->brand->status === 'pending')>⏳ Kutilmoqda</option>
+                                                <option value="blocked" @selected($user->brand->status === 'blocked')>🚫 Bloklangan</option>
+                                            </select>
+                                            <svg class="spinner w-4 h-4 animate-spin text-gray-400 flex-shrink-0 hidden"
+                                                fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                    stroke="currentColor" stroke-width="4" />
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                                             </svg>
                                         </div>
+
+                                        {{-- Expand button --}}
+                                        <button onclick="toggleExpand(this)" data-target="expand-{{ $user->id }}"
+                                            class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-600 text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 rounded-xl hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors">
+                                            <span class="btn-label">Batafsil</span>
+                                            <svg class="chevron w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
                                     @endif
-                                    <div class="flex-1 min-w-0">
-                                        <p class="font-600 text-sm text-gray-800 dark:text-gray-100">
-                                            {{ $user->brand->name }}</p>
-                                        @if ($user->brand->description)
-                                            <p class="text-xs text-gray-400 mt-0.5 line-clamp-2">
-                                                {{ $user->brand->description }}</p>
-                                        @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ── Expand panel ── --}}
+                @if ($user->brand)
+                    <div id="expand-{{ $user->id }}" class="expand-panel">
+                        <div class="p-5 space-y-5">
+
+                            {{-- Brand card --}}
+                            <div class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                                @if ($user->brand->logo)
+                                    <img src="{{ Storage::url($user->brand->logo) }}" class="brand-logo" alt="">
+                                @else
+                                    <div class="brand-logo-placeholder">
+                                        <svg class="w-4 h-4 text-primary-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16" />
+                                        </svg>
                                     </div>
-                                    <div class="text-right flex-shrink-0">
-                                        @if ($user->brand->license)
-                                            <p class="text-xs text-gray-400">Litsenziya</p>
-                                            <p class="text-xs font-600 text-gray-600 dark:text-gray-300">
-                                                {{ $user->brand->license }}</p>
-                                        @endif
-                                        @if ($user->brand->rating)
-                                            <div class="flex items-center justify-end gap-1 mt-1">
-                                                <span class="text-amber-400 text-sm">★</span>
-                                                <span
-                                                    class="text-xs font-600 text-gray-600 dark:text-gray-300">{{ $user->brand->rating }}</span>
+                                @endif
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-600 text-sm text-gray-800 dark:text-gray-100">{{ $user->brand->name }}
+                                    </p>
+                                    @if ($user->brand->description)
+                                        <p class="text-xs text-gray-400 mt-0.5 line-clamp-2">
+                                            {{ $user->brand->description }}</p>
+                                    @endif
+                                </div>
+                                <div class="text-right flex-shrink-0">
+                                    @if ($user->brand->license)
+                                        <p class="text-xs text-gray-400">Litsenziya</p>
+                                        <p class="text-xs font-600 text-gray-600 dark:text-gray-300">
+                                            {{ $user->brand->license }}</p>
+                                    @endif
+                                    @if ($user->brand->rating)
+                                        <div class="flex items-center justify-end gap-1 mt-1">
+                                            <span class="text-amber-400 text-sm">★</span>
+                                            <span
+                                                class="text-xs font-600 text-gray-600 dark:text-gray-300">{{ $user->brand->rating }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            {{-- Partiyalar --}}
+                            @if ($user->brand->parties->count() > 0)
+                                <div>
+                                    <p
+                                        class="text-xs font-600 uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3">
+                                        Partiyalar ({{ $user->brand->parties->count() }})
+                                    </p>
+                                    <div class="space-y-2">
+                                        @foreach ($user->brand->parties->take(5) as $party)
+                                            <div
+                                                class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                                                <div class="flex items-center gap-3 min-w-0">
+                                                    @if ($party->image)
+                                                        <img src="{{ Storage::url($party->image) }}"
+                                                            class="w-8 h-8 rounded-lg object-cover flex-shrink-0">
+                                                    @else
+                                                        <div
+                                                            class="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0">
+                                                            <svg class="w-4 h-4 text-primary-400" fill="none"
+                                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                                            </svg>
+                                                        </div>
+                                                    @endif
+                                                    <div class="min-w-0">
+                                                        <p
+                                                            class="text-xs font-600 text-gray-700 dark:text-gray-200 truncate">
+                                                            {{ $party->name }}</p>
+                                                        <p class="text-xs text-gray-400">#{{ $party->uniq_id }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center gap-3 flex-shrink-0">
+                                                    <span class="text-xs text-gray-400">
+                                                        <strong
+                                                            class="text-gray-600 dark:text-gray-300">{{ $party->products->count() }}</strong>
+                                                        mahsulot
+                                                    </span>
+                                                    @if ($party->price)
+                                                        <span class="text-xs font-600 text-gray-600 dark:text-gray-300">
+                                                            {{ number_format($party->price) }} so'm
+                                                        </span>
+                                                    @endif
+                                                </div>
                                             </div>
+                                        @endforeach
+                                        @if ($user->brand->parties->count() > 5)
+                                            <p class="text-xs text-center text-gray-400 py-1">
+                                                + {{ $user->brand->parties->count() - 5 }} ta partiya
+                                            </p>
                                         @endif
                                     </div>
                                 </div>
+                            @else
+                                <p class="text-xs text-gray-400 italic text-center py-2">Hali partiya qo'shilmagan</p>
+                            @endif
 
-                                {{-- Partiyalar --}}
-                                @if ($user->brand->parties->count() > 0)
-                                    <div>
-                                        <p
-                                            class="text-xs font-600 uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-3">
-                                            Partiyalar ({{ $user->brand->parties->count() }})
-                                        </p>
-                                        <div class="space-y-2">
-                                            @foreach ($user->brand->parties->take(5) as $party)
-                                                <div
-                                                    class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
-                                                    <div class="flex items-center gap-3 min-w-0">
-                                                        @if ($party->image)
-                                                            <img src="{{ Storage::url($party->image) }}"
-                                                                class="w-8 h-8 rounded-lg object-cover flex-shrink-0">
-                                                        @else
-                                                            <div
-                                                                class="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0">
-                                                                <svg class="w-4 h-4 text-primary-400" fill="none"
-                                                                    stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        stroke-width="2"
-                                                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                                                </svg>
-                                                            </div>
-                                                        @endif
-                                                        <div class="min-w-0">
-                                                            <p
-                                                                class="text-xs font-600 text-gray-700 dark:text-gray-200 truncate">
-                                                                {{ $party->name }}</p>
-                                                            <p class="text-xs text-gray-400">#{{ $party->uniq_id }}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex items-center gap-3 flex-shrink-0">
-                                                        <span class="text-xs text-gray-400">
-                                                            <strong
-                                                                class="text-gray-600 dark:text-gray-300">{{ $party->products->count() }}</strong>
-                                                            mahsulot
-                                                        </span>
-                                                        @if ($party->price)
-                                                            <span
-                                                                class="text-xs font-600 text-gray-600 dark:text-gray-300">
-                                                                {{ number_format($party->price) }} so'm
-                                                            </span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                            @if ($user->brand->parties->count() > 5)
-                                                <p class="text-xs text-center text-gray-400 py-1">
-                                                    + {{ $user->brand->parties->count() - 5 }} ta partiya
-                                                </p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @else
-                                    <p class="text-xs text-gray-400 italic text-center py-2">Hali partiya qo'shilmagan</p>
-                                @endif
-
-                            </div>
                         </div>
-                    @endif
-
-                </div>
-            @empty
-                <div
-                    class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-16 text-center">
-                    <div
-                        class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900/30 dark:to-primary-800/20 flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
                     </div>
-                    <h3 class="font-display font-700 text-gray-700 dark:text-gray-300 mb-1">Foydalanuvchilar topilmadi</h3>
-                    <p class="text-sm text-gray-400">Hali hech qanday foydalanuvchi yo'q</p>
-                </div>
-            @endforelse
-        </div>
+                @endif
 
+            </div>
+        @empty
+            <div
+                class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-16 text-center">
+                <div
+                    class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900/30 dark:to-primary-800/20 flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </div>
+                <h3 class="font-display font-700 text-gray-700 dark:text-gray-300 mb-1">Foydalanuvchilar topilmadi</h3>
+                <p class="text-sm text-gray-400">Hali hech qanday foydalanuvchi yo'q</p>
+            </div>
+        @endforelse
     </div>
 
     {{-- ══════════ TOAST ══════════ --}}
@@ -516,9 +453,60 @@
     </div>
 
     <script>
+        // ── Search ──────────────────────────────────────────────
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const q = this.value.toLowerCase().trim();
+            document.querySelectorAll('#usersList [data-search]').forEach(card => {
+                card.style.display = card.dataset.search.includes(q) ? '' : 'none';
+            });
+        });
+
+        // ── Expand / collapse ───────────────────────────────────
+        function toggleExpand(btn) {
+            const panel = document.getElementById(btn.dataset.target);
+            const open = panel.classList.toggle('is-open');
+            btn.querySelector('.btn-label').textContent = open ? 'Yopish' : 'Batafsil';
+            btn.querySelector('.chevron').classList.toggle('rotated', open);
+        }
+
+        // ── Status change ───────────────────────────────────────
+        async function changeStatus(select) {
+            const brandId = select.dataset.brandId;
+            const newStatus = select.value;
+            const spinner = select.parentElement.querySelector('.spinner');
+
+            select.disabled = true;
+            spinner.classList.remove('hidden');
+
+            try {
+                const res = await fetch('/admin/brand/' + brandId + '/status', {
+                    method: 'PATCH',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        status: newStatus
+                    }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    select.className = 'status-select status-' + newStatus;
+                    showToast('Status yangilandi!', 'success');
+                } else {
+                    showToast('Xatolik yuz berdi', 'error');
+                }
+            } catch {
+                showToast('Tarmoq xatoligi', 'error');
+            }
+
+            select.disabled = false;
+            spinner.classList.add('hidden');
+        }
+
+        // ── Toast ────────────────────────────────────────────────
         function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const colors = {
+            const cfg = {
                 success: {
                     bg: 'rgba(16,185,129,0.12)',
                     border: 'rgba(16,185,129,0.25)',
@@ -526,26 +514,26 @@
                     icon: 'M5 13l4 4L19 7'
                 },
                 error: {
-                    bg: 'rgba(248,113,113,0.1)',
+                    bg: 'rgba(248,113,113,0.10)',
                     border: 'rgba(248,113,113,0.25)',
                     color: '#f87171',
                     icon: 'M6 18L18 6M6 6l12 12'
                 },
             };
-            const c = colors[type] || colors.success;
+            const c = cfg[type] || cfg.success;
             const el = document.createElement('div');
             el.className = 'toast-pop flex items-center gap-3 px-5 py-4 rounded-2xl border';
-            el.style.cssText = `background:${c.bg}; border-color:${c.border}; pointer-events:all; min-width:280px;`;
-            el.innerHTML = `
-        <div style="width:32px;height:32px;border-radius:10px;background:${c.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg style="color:${c.color};width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${c.icon}"/>
-            </svg>
-        </div>
-        <p style="font-size:13px;font-weight:600;color:${c.color};flex:1;">${message}</p>
-        <button onclick="this.closest('div').remove()" style="color:rgba(255,255,255,0.3);font-size:12px;">✕</button>
-    `;
-            container.appendChild(el);
+            el.style.cssText = `background:${c.bg};border-color:${c.border};pointer-events:all;min-width:280px;`;
+            el.innerHTML =
+                `
+            <div style="width:32px;height:32px;border-radius:10px;background:${c.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg style="color:${c.color};width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${c.icon}"/>
+                </svg>
+            </div>
+            <p style="font-size:13px;font-weight:600;color:${c.color};flex:1;">${message}</p>
+            <button onclick="this.closest('div').remove()" style="color:rgba(128,128,128,0.5);font-size:12px;">✕</button>`;
+            document.getElementById('toast-container').appendChild(el);
             setTimeout(() => {
                 el.style.transition = 'opacity .3s ease, transform .3s ease';
                 el.style.opacity = '0';
