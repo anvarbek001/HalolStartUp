@@ -440,6 +440,146 @@
             background: #f0fdf4;
         }
 
+        /* ─── PRODUCT CARD ─── */
+        .product-card {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid #e5ebe5;
+            box-shadow: 0 8px 32px rgba(13, 107, 60, 0.08);
+            margin-top: 20px;
+            animation: slideIn 0.4s ease both;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-image-wrap {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            overflow: hidden;
+        }
+
+        .product-image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .img-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(13, 107, 60, 0.15);
+            border-radius: 8px;
+            padding: 5px 11px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #0d6b3c;
+        }
+
+        .product-body {
+            padding: 22px 24px 24px;
+        }
+
+        .product-name {
+            font-size: 19px;
+            font-weight: 800;
+            color: #111827;
+            letter-spacing: -0.3px;
+        }
+
+        .product-rating-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .star {
+            font-size: 15px;
+            color: #fbbf24;
+        }
+
+        .rating-val {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        .rating-count {
+            font-size: 12.5px;
+            color: #9ca3af;
+        }
+
+        .product-divider {
+            height: 1px;
+            background: #f3f4f6;
+            margin: 16px 0;
+        }
+
+        .product-desc {
+            font-size: 13.5px;
+            color: #6b7280;
+            line-height: 1.7;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 18px;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+        }
+
+        .price-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .price-val {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0d6b3c;
+            font-family: 'DM Mono', monospace;
+        }
+
+        .price-currency {
+            font-size: 13px;
+            font-weight: 600;
+            color: #059669;
+            margin-left: 3px;
+        }
+
         /* ─── RESULT ─── */
         .result-box {
             margin-top: 18px;
@@ -750,6 +890,266 @@
             line-height: 1.6;
         }
 
+        /* ─── BRANDS ─── */
+        .brands-section {
+            padding: 72px 24px;
+            overflow: hidden;
+        }
+
+        .brands-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .brands-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            color: #9ca3af;
+            margin-bottom: 32px;
+        }
+
+        .brands-track-wrap {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brands-track-wrap::before,
+        .brands-track-wrap::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 80px;
+            z-index: 2;
+        }
+
+        .brands-track-wrap::before {
+            left: 0;
+            background: linear-gradient(to right, var(--off), transparent);
+        }
+
+        .brands-track-wrap::after {
+            right: 0;
+            background: linear-gradient(to left, var(--off), transparent);
+        }
+
+        .brands-track {
+            display: flex;
+            gap: 20px;
+            animation: scrollBrands 22s linear infinite;
+            width: max-content;
+        }
+
+        .brands-track:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scrollBrands {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        .brand-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            padding: 12px 22px;
+            box-shadow: var(--card-shadow);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .brand-pill-icon {
+            font-size: 20px;
+        }
+
+        .brand_logo {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+
+
+        .brand-pill-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        .brand-pill-badge {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--g2);
+            background: #dcfce7;
+            border-radius: 99px;
+            padding: 2px 8px;
+        }
+
+        /* ─── FAQ ─── */
+        .faq-section {
+            padding: 80px 24px;
+        }
+
+        .faq-inner {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .faq-item {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: box-shadow 0.2s;
+        }
+
+        .faq-item:hover {
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            cursor: pointer;
+            user-select: none;
+            gap: 16px;
+        }
+
+        .faq-q-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .faq-chevron {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--off);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 13px;
+            color: var(--muted);
+            transition: transform 0.3s ease, background 0.2s;
+        }
+
+        .faq-item.open .faq-chevron {
+            transform: rotate(180deg);
+            background: #dcfce7;
+            color: var(--g2);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.3s ease;
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.7;
+            padding: 0 24px;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 300px;
+            padding: 0 24px 20px;
+        }
+
+        /* ─── CONTACT ─── */
+        .contact-section {
+            padding: 0 24px 80px;
+        }
+
+        .contact-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .contact-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 1px solid #bbf7d0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .contact-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 6px;
+        }
+
+        .contact-value {
+            font-size: 17px;
+            font-weight: 800;
+            color: #111827;
+            letter-spacing: -0.2px;
+        }
+
+        .contact-hint {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .contact-link {
+            text-decoration: none;
+            color: inherit;
+            display: contents;
+        }
+
         /* ─── CTA ─── */
         .cta-section {
             padding: 80px 24px;
@@ -813,44 +1213,141 @@
 
         /* ─── FOOTER ─── */
         footer {
-            background: #111827;
-            padding: 28px 24px;
-            text-align: center;
+            background: #0d1117;
+            padding: 56px 24px 32px;
         }
 
-        .footer-inner {
+        .footer-top {
+            max-width: 1080px;
+            margin: 0 auto 40px;
+            display: grid;
+            grid-template-columns: 1.8fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            text-decoration: none;
+        }
+
+        .footer-brand-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--g2);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
+            font-size: 18px;
+            flex-shrink: 0;
         }
 
-        .footer-logo {
-            font-size: 16px;
+        .footer-brand-name {
+            font-size: 18px;
             font-weight: 800;
             color: var(--accent);
         }
 
-        .footer-sep {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: #374151;
-        }
-
-        .footer-text {
-            font-size: 13px;
+        .footer-brand-desc {
+            font-size: 13.5px;
             color: #6b7280;
+            line-height: 1.65;
+            margin-bottom: 20px;
         }
 
-        .footer-text a {
-            color: #9ca3af;
+        .footer-socials {
+            display: flex;
+            gap: 10px;
+        }
+
+        .footer-social {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #1a2332;
+            border: 1px solid #2d3748;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            text-decoration: none;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s;
+        }
+
+        .footer-social:hover {
+            background: var(--g2);
+            border-color: var(--g3);
+            transform: translateY(-2px);
+        }
+
+        .footer-col-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #4b5563;
+            margin-bottom: 16px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-link {
+            font-size: 13.5px;
+            color: #6b7280;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding-top: 28px;
+            border-top: 1px solid #1a2332;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .footer-copy {
+            font-size: 13px;
+            color: #4b5563;
+        }
+
+        .footer-copy a {
+            color: #6b7280;
             text-decoration: none;
         }
 
-        .footer-text a:hover {
+        .footer-copy a:hover {
             color: var(--accent);
+        }
+
+        .footer-bottom-badges {
+            display: flex;
+            gap: 8px;
+        }
+
+        .footer-badge {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #4b5563;
+            background: #1a2332;
+            border: 1px solid #2d3748;
+            border-radius: 6px;
+            padding: 4px 10px;
         }
 
         /* ─── RESPONSIVE ─── */
@@ -865,6 +1362,15 @@
 
             .features-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
             }
         }
 
@@ -900,6 +1406,16 @@
             .hero {
                 padding: 140px 20px 100px;
             }
+
+            .footer-top {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
 
         /* ─── SCROLL REVEAL ─── */
@@ -925,6 +1441,32 @@
         .reveal-delay-3 {
             transition-delay: 0.3s;
         }
+
+        .lang-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background: #f3f4f6 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7280'/%3E%3C/svg%3E") no-repeat right 10px center;
+            border: 1px solid #e5e7eb;
+            border-radius: 99px;
+            padding: 7px 30px 7px 12px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--g2);
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        .lang-select:hover {
+            border-color: var(--g2);
+            background-color: #f0fdf4;
+        }
+
+        .lang-select:focus {
+            border-color: var(--g2);
+            box-shadow: 0 0 0 3px rgba(13, 107, 60, 0.08);
+        }
     </style>
 </head>
 
@@ -933,24 +1475,32 @@
     {{-- ─── NAVBAR ─── --}}
     <nav>
         <div class="nav-pill">
-            <a href="#" class="logo">
+            <a href="/" class="logo">
                 <div class="logo-icon">
                     <img src="halol/halol.jpg" alt="Halol">
                 </div>
                 <span class="logo-name">Halol</span>
             </a>
             <div class="nav-right">
+                {{-- til tugmalari --}}
+                <div class="lang-switcher">
+                    <select class="lang-select" onchange="location='/lang/'+this.value">
+                        <option value="uz" {{ app()->getLocale() === 'uz' ? 'selected' : '' }}>🇺🇿 UZ</option>
+                        <option value="ru" {{ app()->getLocale() === 'ru' ? 'selected' : '' }}>🇷🇺 RU</option>
+                        <option value="en" {{ app()->getLocale() === 'en' ? 'selected' : '' }}>🇬🇧 EN</option>
+                    </select>
+                </div>
                 @if (Route::has('login'))
                     @auth
                         @if (auth()->user()->brand)
-                            <a href="{{ url('/dashboard') }}" class="nav-link">Mening panelim</a>
+                            <a href="{{ url('/dashboard') }}" class="nav-link">{{ __('app.panel') }}</a>
                         @else
-                            <a href="{{ url('/brandRegister') }}" class="nav-link">Mening panelim</a>
+                            <a href="{{ url('/brandRegister') }}" class="nav-link">{{ __('app.panel') }}</a>
                         @endif
                     @else
-                        <a href="{{ route('login') }}" class="nav-link">Kirish</a>
+                        <a href="{{ route('login') }}" class="nav-link">{{ __('app.login') }}</a>
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="nav-cta">Ro'yxatdan o'tish</a>
+                            <a href="{{ route('register') }}" class="nav-cta">{{ __('app.register') }}</a>
                         @endif
                     @endauth
                 @endif
@@ -965,11 +1515,10 @@
         <div class="hero-content">
             <div class="hero-badge">
                 <span class="badge-dot"></span>
-                Ishonchli mahsulot tekshiruvi
+                {{ __('app.reliable') }}
             </div>
-            <h1>Haqiqiy mahsulotni<br><em>soxtasidan ajrating</em></h1>
-            <p class="hero-sub">Serial raqamni kiriting va mahsulotning Halol brendiga tegishliligini bir soniyada bilib
-                oling.</p>
+            <h1>{{ __('app.hero_title_1') }}<br><em>{{ __('app.hero_title_2') }}</em></h1>
+            <p class="hero-sub">{{ __('app.hero_sub') }}</p>
         </div>
     </section>
 
@@ -979,49 +1528,60 @@
             <div class="verify-card-header">
                 <div class="verify-icon">📦</div>
                 <div>
-                    <div class="verify-title">Mahsulotni tekshirish</div>
-                    <div class="verify-subtitle">Qopqoq yoki yorliqdagi serial raqamni kiriting</div>
+                    <div class="verify-title">{{ __('app.verify_title') }}</div>
+                    <div class="verify-subtitle">{{ __('app.verify_sub') }}</div>
                 </div>
             </div>
             <div class="input-row">
                 <input type="text" id="serialInput" class="serial-input" placeholder="Masalan: 12345678901234"
                     maxlength="20" autocomplete="off">
                 <button class="verify-btn" onclick="checkSerial()" id="verifyBtn">
-                    <span class="btn-txt">Tekshirish</span>
+                    <span class="btn-txt">{{ __('app.verify_btn') }}</span>
                     <span class="btn-arrow">→</span>
                     <span class="spinner"></span>
                 </button>
             </div>
             <div class="demo-row">
                 <span class="demo-label">Demo:</span>
-                <span class="demo-chip" onclick="fillDemo('12345678904374')">12345678904374 ✅</span>
+                <span class="demo-chip" onclick="fillDemo('12345678909929')">12345678909929 ✅</span>
                 <span class="demo-chip" onclick="fillDemo('FAKE-0000-000000')">FAKE-0000 ❌</span>
             </div>
             <div class="result-box success" id="resultSuccess">
                 <div class="result-icon-wrap">✅</div>
-                <div>
-                    <div class="result-title">Mahsulot haqiqiy!</div>
-                    <div class="result-desc">Ushbu mahsulot Halol brendining rasmiy mahsuloti hisoblanadi va sifat
-                        nazoratidan o'tgan.</div>
+                <div style="width:100%">
+                    <div class="result-title">{{ __('app.success_title') }}</div>
+                    <div class="result-desc">{{ __('app.success_desc') }}</div>
                     <div class="result-tags">
                         <span class="rtag">🏭 O'zbekiston</span>
                         <span class="rtag">🕌 Halol sertifikat</span>
                     </div>
-                    <div style="margin-top: 4px;">
-                        <div>
-                            <img id="party_image" src="" alt="">
+                    <div class="product-card">
+                        <div class="product-image-wrap">
+                            <img id="party_image" src="" alt="Mahsulot">
+                            <div class="img-badge">Ishonchli</div>
                         </div>
-                        <div style="display: flex; align-items: center;">
-                            <div>Mahsulot nomi:</div>
-                            <div id="party_title"></div>|
-                            <div>Reyting:</div>
-                            <div id="party_rating"></div>
-                        </div>
-                        <div>
-                            <p id="description"></p>
-                        </div>
-                        <div id="price">
-
+                        <div class="product-body">
+                            <div class="product-name" id="party_title"></div>
+                            <div class="product-rating-row">
+                                <div class="stars">
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                </div>
+                                <span class="rating-val" id="party_rating"></span>
+                                <span class="rating-count">· Sertifikatlangan</span>
+                            </div>
+                            <div class="product-divider"></div>
+                            <div class="product-desc" id="description"></div>
+                            <div class="product-price-row">
+                                <div class="price-label">Narxi</div>
+                                <div>
+                                    <span class="price-val" id="price"></span>
+                                    <span class="price-currency">so'm</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1029,9 +1589,9 @@
             <div class="result-box error" id="resultError">
                 <div class="result-icon-wrap">❌</div>
                 <div>
-                    <div class="result-title">Mahsulot topilmadi</div>
-                    <div class="result-desc">Bu serial raqam bazada mavjud emas. Murojaat: <strong>+998 71 200 00
-                            00</strong></div>
+                    <div class="result-title">{{ __('app.error_title') }}</div>
+                    <div class="result-desc">{{ __('app.error_desc') }} Murojaat: <strong>+998 93 873 18
+                            09</strong></div>
                 </div>
             </div>
         </div>
@@ -1042,28 +1602,28 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-num">500K+</div>
-                <div class="stat-lbl">Tekshirilgan mahsulot</div>
+                <div class="stat-lbl">{{ __('app.checked_products') }}</div>
             </div>
             <div class="stat-card" style="transition-delay:0.1s">
                 <div class="stat-num">99.9%</div>
-                <div class="stat-lbl">Aniqlik darajasi</div>
+                <div class="stat-lbl">{{ __('app.accuracy') }}</div>
             </div>
             <div class="stat-card" style="transition-delay:0.2s">
                 <div class="stat-num">1 sek</div>
-                <div class="stat-lbl">O'rtacha tekshiruv vaqti</div>
+                <div class="stat-lbl">{{ __('app.avg_time') }}</div>
             </div>
             <div class="stat-card" style="transition-delay:0.3s">
-                <div class="stat-num">14+</div>
-                <div class="stat-lbl">Viloyatda mavjud</div>
+                <div class="stat-num">12</div>
+                <div class="stat-lbl">{{ __('app.regions') }}</div>
             </div>
         </div>
     </div>
 
     {{-- ─── HOW IT WORKS ─── --}}
     <section class="section" id="how">
-        <div class="section-eyebrow reveal">Qanday ishlaydi</div>
+        <div class="section-eyebrow reveal">{{ __('app.how_title') }}</div>
         <h2 class="section-heading reveal reveal-delay-1">3 ta oddiy qadam</h2>
-        <p class="section-sub reveal reveal-delay-2">Mahsulotni tekshirish hech qachon bu qadar oson bo'lmagan.</p>
+        <p class="section-sub reveal reveal-delay-2">{{ __('app.how_sub') }}</p>
         <div class="steps-grid">
             <div class="step-card reveal">
                 <div class="step-num">1</div>
@@ -1125,6 +1685,132 @@
         </div>
     </section>
 
+    {{-- ─── BRANDS ─── --}}
+    <section class="brands-section">
+        <div class="brands-inner">
+            <div class="brands-title reveal">Hamkor brendlar</div>
+            <div class="brands-track-wrap">
+                <div class="brands-track">
+                    @foreach ($brands as $brand)
+                        <div class="brand-pill"><span class="brand-pill-icon"><img
+                                    src="{{ asset('storage/' . $brand->logo) }}" class="brand_logo"
+                                    alt=""></span><span
+                                class="brand-pill-name">{{ $brand->name }}</span><span class="brand-pill-badge">✓
+                                Halol</span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- ─── FAQ ─── --}}
+    <section class="faq-section" id="faq">
+        <div class="faq-inner">
+            <div class="section-eyebrow reveal" style="text-align:center">Ko'p so'raladigan savollar</div>
+            <h2 class="section-heading reveal reveal-delay-1" style="text-align:center; margin-bottom:8px">Savol va
+                javoblar</h2>
+            <p class="section-sub reveal reveal-delay-2" style="text-align:center; margin:0 auto 40px">Bizga tez-tez
+                beriladigan savollar va ularning javoblari.</p>
+
+            <div class="faq-list">
+                <div class="faq-item reveal">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-q-text">Serial raqam qayerda yozilgan bo'ladi?</span>
+                        <span class="faq-chevron">▾</span>
+                    </div>
+                    <div class="faq-answer">Serial raqam odatda mahsulot qopqog'ining yon tomonida, yorliqda yoki
+                        qutining tagida yozilgan bo'ladi. U "S/N:", "Ser:", yoki "№" belgisi bilan boshlanadi.</div>
+                </div>
+                <div class="faq-item reveal reveal-delay-1">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-q-text">Tekshirish pullikmi?</span>
+                        <span class="faq-chevron">▾</span>
+                    </div>
+                    <div class="faq-answer">Yo'q, mahsulotni tekshirish mutlaqo bepul. Siz har qanday vaqtda,
+                        cheklovsiz tekshirishingiz mumkin.</div>
+                </div>
+                <div class="faq-item reveal reveal-delay-2">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-q-text">Mahsulot topilmasa nima qilish kerak?</span>
+                        <span class="faq-chevron">▾</span>
+                    </div>
+                    <div class="faq-answer">Agar mahsulot bazada topilmasa, bu mahsulot Halol tizimida ro'yxatdan
+                        o'tmagan yoki soxta bo'lishi mumkin. Bunday holda +998 93 873 18 09 raqamiga murojaat qiling
+                        yoki sotuvchiga qaytaring.</div>
+                </div>
+                <div class="faq-item reveal">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-q-text">Halol sertifikat nima va u qanchalik ishonchli?</span>
+                        <span class="faq-chevron">▾</span>
+                    </div>
+                    <div class="faq-answer">Halol sertifikat mahsulotning Islom talablariga muvofiq tayyorlanganligini
+                        tasdiqlovchi rasmiy hujjat. Bizning tizimimizdagi barcha brendlar O'zbekiston Halol markazi
+                        tomonidan tekshirilgan va tasdiqlangan.</div>
+                </div>
+                <div class="faq-item reveal reveal-delay-1">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span class="faq-q-text">Brendim Halol tizimiga qo'shilishi uchun nima qilish kerak?</span>
+                        <span class="faq-chevron">▾</span>
+                    </div>
+                    <div class="faq-answer">Ro'yxatdan o'tish tugmasini bosing va kerakli ma'lumotlarni to'ldiring.
+                        Bizning jamoamiz 1-2 ish kuni ichida siz bilan bog'lanadi va keyingi qadamlar haqida yo'riqnoma
+                        beradi.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- ─── CONTACT ─── --}}
+    <section class="contact-section" id="contact">
+        <div class="contact-inner">
+            <div class="section-eyebrow reveal">Aloqa</div>
+            <h2 class="section-heading reveal reveal-delay-1">Biz bilan bog'laning</h2>
+            <p class="section-sub reveal reveal-delay-2">Savollaringiz bormi? Istalgan qulay usulda murojaat qiling.
+            </p>
+            <div class="contact-grid">
+                <a href="tel:+998712000000" class="contact-link">
+                    <div class="contact-card reveal">
+                        <div class="contact-icon">📞</div>
+                        <div>
+                            <div class="contact-label">Telefon</div>
+                            <div class="contact-value">+998 93 873 18 09</div>
+                            <div class="contact-hint">Du–Ju: 09:00 – 18:00</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="mailto:info@halol.uz" class="contact-link">
+                    <div class="contact-card reveal reveal-delay-1">
+                        <div class="contact-icon">✉️</div>
+                        <div>
+                            <div class="contact-label">Elektron pochta</div>
+                            <div class="contact-value">info@halol.uz</div>
+                            <div class="contact-hint">24 soat ichida javob beramiz</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="https://t.me/haloluz" target="_blank" class="contact-link">
+                    <div class="contact-card reveal reveal-delay-2">
+                        <div class="contact-icon">✈️</div>
+                        <div>
+                            <div class="contact-label">Telegram</div>
+                            <div class="contact-value">@haloluz</div>
+                            <div class="contact-hint">Tezkor muloqot uchun</div>
+                        </div>
+                    </div>
+                </a>
+                <div class="contact-card reveal reveal-delay-3">
+                    <div class="contact-icon">📍</div>
+                    <div>
+                        <div class="contact-label">Manzil</div>
+                        <div class="contact-value">Toshkent sh.</div>
+                        <div class="contact-hint">Amir Temur ko'chasi, 108</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     {{-- ─── CTA ─── --}}
     <section class="cta-section">
         <div class="cta-inner reveal">
@@ -1139,14 +1825,67 @@
 
     {{-- ─── FOOTER ─── --}}
     <footer>
-        <div class="footer-inner">
-            <span class="footer-logo">Halol</span>
-            <span class="footer-sep"></span>
-            <span class="footer-text">&copy; {{ date('Y') }} Barcha huquqlar himoyalangan</span>
-            <span class="footer-sep"></span>
-            <span class="footer-text">O'zbekiston</span>
-            <span class="footer-sep"></span>
-            <span class="footer-text"><a href="tel:+998712000000">+998 71 200 00 00</a></span>
+        <div class="footer-top">
+            <div>
+                <a href="/" class="footer-brand-logo">
+                    <div class="footer-brand-icon">🌿</div>
+                    <span class="footer-brand-name">Halol</span>
+                </a>
+                <p class="footer-brand-desc">O'zbekistonda mahsulot autentifikatsiyasi va halol sertifikatlash tizimi.
+                    Har bir mahsulot — tekshirilgan va ishonchli.</p>
+                <div class="footer-socials">
+                    <a href="https://t.me/haloluz" target="_blank" class="footer-social" title="Telegram">✈️</a>
+                    <a href="https://instagram.com/haloluz" target="_blank" class="footer-social"
+                        title="Instagram">📸</a>
+                    <a href="https://facebook.com/haloluz" target="_blank" class="footer-social"
+                        title="Facebook">👥</a>
+                    <a href="https://youtube.com/@haloluz" target="_blank" class="footer-social"
+                        title="YouTube">▶️</a>
+                </div>
+            </div>
+
+            <div>
+                <div class="footer-col-title">Navigatsiya</div>
+                <div class="footer-links">
+                    <a href="#verify" class="footer-link">Mahsulot tekshirish</a>
+                    <a href="#how" class="footer-link">Qanday ishlaydi</a>
+                    <a href="#faq" class="footer-link">Savol-javob</a>
+                    <a href="#contact" class="footer-link">Aloqa</a>
+                </div>
+            </div>
+
+            <div>
+                <div class="footer-col-title">Brendlar uchun</div>
+                <div class="footer-links">
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="footer-link">Ro'yxatdan o'tish</a>
+                    @endif
+                    @if (Route::has('login'))
+                        <a href="{{ route('login') }}" class="footer-link">Kirish</a>
+                    @endif
+                    <a href="#" class="footer-link">Narxlar</a>
+                    <a href="#" class="footer-link">API hujjatlari</a>
+                </div>
+            </div>
+
+            <div>
+                <div class="footer-col-title">Yordam</div>
+                <div class="footer-links">
+                    <a href="tel:+998712000000" class="footer-link">+998 93 873 18 09</a>
+                    <a href="mailto:info@halol.uz" class="footer-link">info@halol.uz</a>
+                    <a href="#" class="footer-link">Maxfiylik siyosati</a>
+                    <a href="#" class="footer-link">Foydalanish shartlari</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span class="footer-copy">&copy; {{ date('Y') }} Halol. Barcha huquqlar himoyalangan · <a
+                    href="#">O'zbekiston</a></span>
+            <div class="footer-bottom-badges">
+                <span class="footer-badge">🕌 Halol sertifikat</span>
+                <span class="footer-badge">🇺🇿 Made in Uzbekistan</span>
+            </div>
         </div>
     </footer>
 
@@ -1197,11 +1936,11 @@
                     btn.disabled = false;
                     if (data.success) {
                         document.getElementById('resultSuccess').classList.add('visible');
-                        partyTitle.textContent = data.party_name
-                        partyRating.textContent = data.rating
+                        partyTitle.textContent = data.party_name;
+                        partyRating.textContent = data.rating;
                         partyImage.src = data.image;
-                        partyDesc.textContent = data.description
-                        partyPrice.textContent = data.price
+                        partyDesc.textContent = data.description;
+                        partyPrice.textContent = Number(data.price).toLocaleString('uz-UZ');
                     } else {
                         document.getElementById('resultError').classList.add('visible');
                     }
@@ -1217,12 +1956,18 @@
             if (e.key === 'Enter') checkSerial();
         });
 
+        /* ─── FAQ TOGGLE ─── */
+        function toggleFaq(el) {
+            const item = el.closest('.faq-item');
+            const isOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+            if (!isOpen) item.classList.add('open');
+        }
+
         /* ─── SCROLL REVEAL ─── */
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
         }, {
             threshold: 0.12

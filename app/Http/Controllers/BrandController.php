@@ -47,6 +47,12 @@ class BrandController extends Controller
                 $order = $brand->order + 1;
             }
 
+            $brandName = Brand::where('name', $request->name)->first();
+
+            if ($brandName) {
+                return redirect()->route('brandRegister')->with('error', "Bunday brend nomi bazada mavjud");
+            }
+
             Brand::create([
                 'user_id' => Auth::user()->id,
                 'viloyat_id' => $request->viloyat_id,

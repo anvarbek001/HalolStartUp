@@ -6,11 +6,14 @@ use App\Http\Controllers\PartyController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransactionsController;
+use App\Models\Brand;
 use App\Models\Viloyat;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', [
+        'brands' => Brand::all(),
+    ]);
 });
 
 Route::get('/dashboard', function () {
@@ -40,6 +43,15 @@ Route::post('/products/check', [ProductController::class, 'check'])->name('produ
 Route::get('/admin', [AdminController::class, 'index'])->name('admin');
 Route::patch('/admin/brand/{brand}/status', [AdminController::class, 'updateBrandStatus'])
     ->name('admin.brand.status');
+
+
+
+Route::get('/lang/{locale}', function (string $locale) {
+    if (in_array($locale, ['uz', 'ru', 'en'])) {
+        session(['locale' => $locale]);
+    }
+    return back();
+})->name('lang.switch');
 
 
 require __DIR__ . '/auth.php';
