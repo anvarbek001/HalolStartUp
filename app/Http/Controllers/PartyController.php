@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Imports\ProductsImport;
 use App\Models\Brand;
+use App\Models\PartiesHistory;
 use App\Models\Party;
+use App\Models\UserBalance;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -147,11 +150,51 @@ class PartyController extends Controller
         }
 
         if ($party->status == 'inactive') {
-            $party->status = 'active';
-            $party->save();
+            if ($party->payment_status == 'unpaid') {
+                $productCount = count($party->products);
+                if ($productCount <= 0) {
+                    return back()->with('error', "Partiyani faolashtirish uchun mahsulot qo'shing");
+                }
+                $productPrice = ($party->price * 0.01);
+                $allPrice = $productPrice * $productCount;
+                $userBalance = Auth::user()->userBalance->balance ?? 0;
+                if ($userBalance <= 0) {
+                    return back()->with('error', "Partiyani faolashtirish hisobni to'ldiring");
+                }
+                $result = ($userBalance - $allPrice);
+                $neededPrice = $allPrice - $userBalance;
+                number_format($neededPrice, 0, '.', ' ');
+                if ($result < 0) {
+                    return back()->with('error', "Hisobingizda $neededPrice so'm mablag' yetarli emas");
+                }
+                $party->payment_status = 'paid';
+                $party->status = 'active';
+                $party->save();
+                $balance = UserBalance::where('user_id', Auth::user()->id)->first();
+                $balance->update([
+                    'balance' => $result,
+                ]);
+            } else {
+                $party->status = 'active';
+                PartiesHistory::create([
+                    'user_id' => Auth::user()->id,
+                    'party_id' => $party_id,
+                    'before_changing_status' => 'inactive',
+                    'after_changing_status' => 'active',
+                    'date_changing' => Carbon::now(),
+                ]);
+                $party->save();
+            }
             return back()->with('success', 'Partiya faollashtirildi');
         } elseif ($party->status == 'active') {
             $party->status = 'inactive';
+            PartiesHistory::create([
+                'user_id' => Auth::user()->id,
+                'party_id' => $party_id,
+                'before_changing_status' => 'active',
+                'after_changing_status' => 'inactive',
+                'date_changing' => Carbon::now(),
+            ]);
             $party->save();
             return back()->with('success', 'Partiya faolsizlantirildi');
         }

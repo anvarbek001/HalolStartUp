@@ -16,6 +16,9 @@ class Party extends Model
         'description',
         'order',
         'image',
+        'status',
+        'payment_status',
+        'product_count',
         'uniq_id',
         'manufactured_at',
         'expires_at',
@@ -53,5 +56,10 @@ class Party extends Model
         } elseif ($this->status == 'active') {
             return '<span style="color:red;">nofaollashtirish</span>';
         }
+    }
+
+    public function partieshistories(): HasMany
+    {
+        return $this->hasMany(PartiesHistory::class);
     }
 }

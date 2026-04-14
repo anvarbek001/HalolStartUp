@@ -7,6 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Halol — Mahsulot Autentifikatsiyasi</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800&family=dm-mono:400,500"
         rel="stylesheet" />
     <style>
@@ -490,6 +491,21 @@
             font-size: 12px;
             font-weight: 700;
             color: #0d6b3c;
+        }
+
+        .logo-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            border-radius: 50%;
+        }
+
+        .logo-badge img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
         }
 
         .product-body {
@@ -1547,18 +1563,19 @@
                 <span class="demo-chip" onclick="fillDemo('FAKE-0000-000000')">FAKE-0000 ❌</span>
             </div>
             <div class="result-box success" id="resultSuccess">
-                <div class="result-icon-wrap">✅</div>
+                {{-- <div class="result-icon-wrap">✅</div> --}}
                 <div style="width:100%">
                     <div class="result-title">{{ __('app.success_title') }}</div>
                     <div class="result-desc">{{ __('app.success_desc') }}</div>
                     <div class="result-tags">
-                        <span class="rtag">🏭 O'zbekiston</span>
-                        <span class="rtag">🕌 Halol sertifikat</span>
+                        <span class="rtag">O'zbekiston</span>
+                        <span class="rtag">Halol sertifikat</span>
                     </div>
                     <div class="product-card">
                         <div class="product-image-wrap">
                             <img id="party_image" src="" alt="Mahsulot">
-                            <div class="img-badge">Ishonchli</div>
+                            <div class="img-badge">{{ __('app.img_badge') }}</div>
+                            <div class="logo-badge"><img id="logo_brand" src="" alt=""></div>
                         </div>
                         <div class="product-body">
                             <div class="product-name" id="party_title"></div>
@@ -1571,15 +1588,15 @@
                                     <span class="star">★</span>
                                 </div>
                                 <span class="rating-val" id="party_rating"></span>
-                                <span class="rating-count">· Sertifikatlangan</span>
+                                <span class="rating-count">· {{ __('app.certified') }}</span>
                             </div>
                             <div class="product-divider"></div>
                             <div class="product-desc" id="description"></div>
                             <div class="product-price-row">
-                                <div class="price-label">Narxi</div>
+                                <div class="price-label">{{ __('app.price_label') }}</div>
                                 <div>
                                     <span class="price-val" id="price"></span>
-                                    <span class="price-currency">so'm</span>
+                                    <span class="price-currency">{{ __('app.price_currency') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -1622,23 +1639,23 @@
     {{-- ─── HOW IT WORKS ─── --}}
     <section class="section" id="how">
         <div class="section-eyebrow reveal">{{ __('app.how_title') }}</div>
-        <h2 class="section-heading reveal reveal-delay-1">3 ta oddiy qadam</h2>
+        <h2 class="section-heading reveal reveal-delay-1">{{ __('app.how_steps_title') }}</h2>
         <p class="section-sub reveal reveal-delay-2">{{ __('app.how_sub') }}</p>
         <div class="steps-grid">
             <div class="step-card reveal">
                 <div class="step-num">1</div>
-                <h3>Serial raqamni toping</h3>
-                <p>Mahsulot qopqog'i, yorliq yoki qutisidagi "S/N:" raqamni toping.</p>
+                <h3>{{ __('app.step1_title') }}</h3>
+                <p>{{ __('app.step1_desc') }}</p>
             </div>
             <div class="step-card reveal reveal-delay-1">
                 <div class="step-num">2</div>
-                <h3>Raqamni kiriting</h3>
-                <p>Yuqoridagi qidiruv maydoniga serial raqamni kiriting va tekshiring.</p>
+                <h3>{{ __('app.step2_title') }}</h3>
+                <p>{{ __('app.step2_desc') }}</p>
             </div>
             <div class="step-card reveal reveal-delay-2">
                 <div class="step-num">3</div>
-                <h3>Natijani bilib oling</h3>
-                <p>Tizim bir soniyada mahsulotning haqiqiy yoki soxta ekanini ko'rsatadi.</p>
+                <h3>{{ __('app.step3_title') }}</h3>
+                <p>{{ __('app.step3_desc') }}</p>
             </div>
         </div>
     </section>
@@ -1646,40 +1663,39 @@
     {{-- ─── FEATURES ─── --}}
     <section class="features-section">
         <div class="features-inner">
-            <div class="section-eyebrow reveal">Nima uchun Halol</div>
-            <h2 class="section-heading reveal reveal-delay-1">Sog'liq va ishonch — birinchi o'rinda</h2>
-            <p class="section-sub reveal reveal-delay-2">Soxta mahsulotlardan himoyalanish uchun eng ishonchli yechim.
-            </p>
+            <div class="section-eyebrow reveal">{{ __('app.features_eyebrow') }}</div>
+            <h2 class="section-heading reveal reveal-delay-1">{{ __('app.features_heading') }}</h2>
+            <p class="section-sub reveal reveal-delay-2">{{ __('app.features_sub') }}</p>
             <div class="features-grid">
                 <div class="feature-card reveal">
                     <div class="feature-icon">🔒</div>
-                    <h3>Xavfsiz tekshiruv</h3>
-                    <p>Har bir serial raqam kriptografik himoya ostida. Soxtalashtirish imkonsiz.</p>
+                    <h3>{{ __('app.feat1_title') }}</h3>
+                    <p>{{ __('app.feat1_desc') }}</p>
                 </div>
                 <div class="feature-card reveal reveal-delay-1">
                     <div class="feature-icon">⚡</div>
-                    <h3>Bir soniyada natija</h3>
-                    <p>Kuchli server infratuzilmasi yordamida tezkor va ishonchli tekshiruv.</p>
+                    <h3>{{ __('app.feat2_title') }}</h3>
+                    <p>{{ __('app.feat2_desc') }}</p>
                 </div>
                 <div class="feature-card reveal reveal-delay-2">
                     <div class="feature-icon">📋</div>
-                    <h3>To'liq ma'lumot</h3>
-                    <p>Ishlab chiqarilgan sana, joy, muddati va boshqa muhim ma'lumotlar.</p>
+                    <h3>{{ __('app.feat3_title') }}</h3>
+                    <p>{{ __('app.feat3_desc') }}</p>
                 </div>
                 <div class="feature-card reveal">
                     <div class="feature-icon">🕌</div>
-                    <h3>Halol sertifikat</h3>
-                    <p>Barcha mahsulotlar rasmiy halol sertifikat olgan manbalardan keltiriladi.</p>
+                    <h3>{{ __('app.feat4_title') }}</h3>
+                    <p>{{ __('app.feat4_desc') }}</p>
                 </div>
                 <div class="feature-card reveal reveal-delay-1">
                     <div class="feature-icon">🇺🇿</div>
-                    <h3>Mahalliy ishlab chiqaruv</h3>
-                    <p>O'zbekiston ishlab chiqaruvchilari bilan sifat nazorati ostida ishlaydi.</p>
+                    <h3>{{ __('app.feat5_title') }}</h3>
+                    <p>{{ __('app.feat5_desc') }}</p>
                 </div>
                 <div class="feature-card reveal reveal-delay-2">
                     <div class="feature-icon">📞</div>
-                    <h3>24/7 qo'llab-quvvatlash</h3>
-                    <p>Muammo yuzaga kelsa, mutaxassislar sizga yordam berishga doim tayyor.</p>
+                    <h3>{{ __('app.feat6_title') }}</h3>
+                    <p>{{ __('app.feat6_desc') }}</p>
                 </div>
             </div>
         </div>
@@ -1688,7 +1704,7 @@
     {{-- ─── BRANDS ─── --}}
     <section class="brands-section">
         <div class="brands-inner">
-            <div class="brands-title reveal">Hamkor brendlar</div>
+            <div class="brands-title reveal">{{ __('app.brands_title') }}</div>
             <div class="brands-track-wrap">
                 <div class="brands-track">
                     @foreach ($brands as $brand)
@@ -1739,7 +1755,7 @@
                         o'tmagan yoki soxta bo'lishi mumkin. Bunday holda +998 93 873 18 09 raqamiga murojaat qiling
                         yoki sotuvchiga qaytaring.</div>
                 </div>
-                <div class="faq-item reveal">
+                {{-- <div class="faq-item reveal">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <span class="faq-q-text">Halol sertifikat nima va u qanchalik ishonchli?</span>
                         <span class="faq-chevron">▾</span>
@@ -1747,7 +1763,7 @@
                     <div class="faq-answer">Halol sertifikat mahsulotning Islom talablariga muvofiq tayyorlanganligini
                         tasdiqlovchi rasmiy hujjat. Bizning tizimimizdagi barcha brendlar O'zbekiston Halol markazi
                         tomonidan tekshirilgan va tasdiqlangan.</div>
-                </div>
+                </div> --}}
                 <div class="faq-item reveal reveal-delay-1">
                     <div class="faq-question" onclick="toggleFaq(this)">
                         <span class="faq-q-text">Brendim Halol tizimiga qo'shilishi uchun nima qilish kerak?</span>
@@ -1764,18 +1780,17 @@
     {{-- ─── CONTACT ─── --}}
     <section class="contact-section" id="contact">
         <div class="contact-inner">
-            <div class="section-eyebrow reveal">Aloqa</div>
-            <h2 class="section-heading reveal reveal-delay-1">Biz bilan bog'laning</h2>
-            <p class="section-sub reveal reveal-delay-2">Savollaringiz bormi? Istalgan qulay usulda murojaat qiling.
-            </p>
+            <div class="section-eyebrow reveal">{{ __('app.contact') }}</div>
+            <h2 class="section-heading reveal reveal-delay-1">{{ __('app.contact_title') }}</h2>
+            <p class="section-sub reveal reveal-delay-2">{{ __('app.contact_sub') }}</p>
             <div class="contact-grid">
                 <a href="tel:+998712000000" class="contact-link">
                     <div class="contact-card reveal">
                         <div class="contact-icon">📞</div>
                         <div>
-                            <div class="contact-label">Telefon</div>
+                            <div class="contact-label">{{ __('app.contact_phone') }}</div>
                             <div class="contact-value">+998 93 873 18 09</div>
-                            <div class="contact-hint">Du–Ju: 09:00 – 18:00</div>
+                            <div class="contact-hint">{{ __('app.contact_phone_hint') }}</div>
                         </div>
                     </div>
                 </a>
@@ -1783,9 +1798,9 @@
                     <div class="contact-card reveal reveal-delay-1">
                         <div class="contact-icon">✉️</div>
                         <div>
-                            <div class="contact-label">Elektron pochta</div>
+                            <div class="contact-label">{{ __('app.contact_email') }}</div>
                             <div class="contact-value">info@halol.uz</div>
-                            <div class="contact-hint">24 soat ichida javob beramiz</div>
+                            <div class="contact-hint">{{ __('app.contact_email_hint') }}</div>
                         </div>
                     </div>
                 </a>
@@ -1793,16 +1808,16 @@
                     <div class="contact-card reveal reveal-delay-2">
                         <div class="contact-icon">✈️</div>
                         <div>
-                            <div class="contact-label">Telegram</div>
+                            <div class="contact-label">{{ __('app.contact_tg') }}</div>
                             <div class="contact-value">@haloluz</div>
-                            <div class="contact-hint">Tezkor muloqot uchun</div>
+                            <div class="contact-hint">{{ __('app.contact_tg_hint') }}</div>
                         </div>
                     </div>
                 </a>
                 <div class="contact-card reveal reveal-delay-3">
                     <div class="contact-icon">📍</div>
                     <div>
-                        <div class="contact-label">Manzil</div>
+                        <div class="contact-label">{{ __('app.contact_addr') }}</div>
                         <div class="contact-value">Toshkent sh.</div>
                         <div class="contact-hint">Amir Temur ko'chasi, 108</div>
                     </div>
@@ -1814,11 +1829,10 @@
     {{-- ─── CTA ─── --}}
     <section class="cta-section">
         <div class="cta-inner reveal">
-            <h2>Mahsulotingizni hoziroq tekshiring</h2>
-            <p>Sog'lig'ingiz uchun faqat haqiqiy Halol mahsulotlarini tanlang. Tekshirish bepul va bir soniyada.</p>
+            <h2>{{ __('app.cta_heading') }}</h2>
+            <p>{{ __('app.cta_sub') }}</p>
             <button class="cta-btn"
-                onclick="document.getElementById('serialInput').focus(); window.scrollTo({top: 320, behavior: 'smooth'})">
-                Tekshirishni boshlash <span>→</span>
+                onclick="document.getElementById('serialInput').focus(); window.scrollTo({top: 320, behavior: 'smooth'})">{{ __('app.cta_btn') }}<span>→</span>
             </button>
         </div>
     </section>
@@ -1831,31 +1845,41 @@
                     <div class="footer-brand-icon">🌿</div>
                     <span class="footer-brand-name">Halol</span>
                 </a>
-                <p class="footer-brand-desc">O'zbekistonda mahsulot autentifikatsiyasi va halol sertifikatlash tizimi.
-                    Har bir mahsulot — tekshirilgan va ishonchli.</p>
+                <p class="footer-brand-desc">{{ __('app.footer_desc') }}</p>
                 <div class="footer-socials">
-                    <a href="https://t.me/haloluz" target="_blank" class="footer-social" title="Telegram">✈️</a>
-                    <a href="https://instagram.com/haloluz" target="_blank" class="footer-social"
-                        title="Instagram">📸</a>
-                    <a href="https://facebook.com/haloluz" target="_blank" class="footer-social"
-                        title="Facebook">👥</a>
-                    <a href="https://youtube.com/@haloluz" target="_blank" class="footer-social"
-                        title="YouTube">▶️</a>
+                    <a href="https://t.me/Halol_Brendlar" target="_blank" class="footer-social" title="Telegram">
+                        <i class="bi bi-telegram"></i>
+                    </a>
+
+                    <a href="https://www.instagram.com/halol_brand?igsh=eHowd3V3N2J4aGls" target="_blank"
+                        class="footer-social" title="Instagram">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+
+                    {{-- 
+                        <a href="https://facebook.com/haloluz" target="_blank" class="footer-social" title="Facebook">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+
+                        <a href="https://youtube.com/@haloluz" target="_blank" class="footer-social" title="YouTube">
+                            <i class="bi bi-youtube"></i>
+                        </a>
+                    --}}
                 </div>
             </div>
 
             <div>
-                <div class="footer-col-title">Navigatsiya</div>
+                <div class="footer-col-title">{{ __('app.navigation') }}</div>
                 <div class="footer-links">
-                    <a href="#verify" class="footer-link">Mahsulot tekshirish</a>
-                    <a href="#how" class="footer-link">Qanday ishlaydi</a>
-                    <a href="#faq" class="footer-link">Savol-javob</a>
-                    <a href="#contact" class="footer-link">Aloqa</a>
+                    <a href="#verify" class="footer-link">{{ __('app.footer_link_verify') }}</a>
+                    <a href="#how" class="footer-link">{{ __('app.footer_link_how') }}</a>
+                    <a href="#faq" class="footer-link">{{ __('app.footer_link_faq') }}</a>
+                    <a href="#contact" class="footer-link">{{ __('app.footer_link_contact') }}</a>
                 </div>
             </div>
 
             <div>
-                <div class="footer-col-title">Brendlar uchun</div>
+                <div class="footer-col-title">{{ __('app.brands_for') }}</div>
                 <div class="footer-links">
                     @if (Route::has('register'))
                         <a href="{{ route('register') }}" class="footer-link">Ro'yxatdan o'tish</a>
@@ -1863,28 +1887,28 @@
                     @if (Route::has('login'))
                         <a href="{{ route('login') }}" class="footer-link">Kirish</a>
                     @endif
-                    <a href="#" class="footer-link">Narxlar</a>
-                    <a href="#" class="footer-link">API hujjatlari</a>
+                    <a href="#" class="footer-link">{{ __('app.footer_link_price') }}</a>
+                    <a href="#" class="footer-link">{{ __('app.footer_link_api') }}</a>
                 </div>
             </div>
 
             <div>
-                <div class="footer-col-title">Yordam</div>
+                <div class="footer-col-title">{{ __('app.help') }}</div>
                 <div class="footer-links">
                     <a href="tel:+998712000000" class="footer-link">+998 93 873 18 09</a>
                     <a href="mailto:info@halol.uz" class="footer-link">info@halol.uz</a>
-                    <a href="#" class="footer-link">Maxfiylik siyosati</a>
-                    <a href="#" class="footer-link">Foydalanish shartlari</a>
+                    <a href="#" class="footer-link">{{ __('app.footer_link_privacy') }}</a>
+                    <a href="#" class="footer-link">{{ __('app.footer_link_terms') }}</a>
                 </div>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <span class="footer-copy">&copy; {{ date('Y') }} Halol. Barcha huquqlar himoyalangan · <a
+            <span class="footer-copy">&copy; {{ date('Y') }} Halol. {{ __('app.footer_rights') }} · <a
                     href="#">O'zbekiston</a></span>
             <div class="footer-bottom-badges">
-                <span class="footer-badge">🕌 Halol sertifikat</span>
-                <span class="footer-badge">🇺🇿 Made in Uzbekistan</span>
+                <span class="footer-badge">{{ __('app.footer_badge_halol') }}</span>
+                <span class="footer-badge">{{ __('app.footer_badge_made') }}</span>
             </div>
         </div>
     </footer>
@@ -1903,6 +1927,7 @@
             const partyTitle = document.getElementById('party_title');
             const partyRating = document.getElementById('party_rating');
             const partyImage = document.getElementById('party_image');
+            const logoBrand = document.getElementById('logo_brand');
             const partyDesc = document.getElementById('description');
             const partyPrice = document.getElementById('price');
             const val = input.value.trim().toUpperCase();
@@ -1939,6 +1964,7 @@
                         partyTitle.textContent = data.party_name;
                         partyRating.textContent = data.rating;
                         partyImage.src = data.image;
+                        logoBrand.src = data.brand_logo;
                         partyDesc.textContent = data.description;
                         partyPrice.textContent = Number(data.price).toLocaleString('uz-UZ');
                     } else {

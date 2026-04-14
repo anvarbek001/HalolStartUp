@@ -21,10 +21,12 @@ return new class extends Migration
             $table->bigInteger('order');
             $table->string('image');
             $table->string('status')->default('inactive');
+            $table->string('payment_status')->default('unpaid');
+            $table->integer('product_count')->default(0);
             $table->bigInteger('uniq_id')->nullable();
             $table->dateTime('manufactured_at')->nullable();
-            $table->dateTime('expires_at')->nullable(); 
-            $table->integer('price')->nullable(); 
+            $table->dateTime('expires_at')->nullable();
+            $table->integer('price')->nullable();
             $table->timestamps();
         });
     }

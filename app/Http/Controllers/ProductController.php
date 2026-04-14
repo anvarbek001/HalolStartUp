@@ -38,6 +38,7 @@ class ProductController extends Controller
         if ($validate->fails()) {
             return response()->json([
                 'success' => false,
+                'message' => "So'rov turida xatolik"
             ], 422);
         }
 
@@ -46,12 +47,14 @@ class ProductController extends Controller
         if (!$product) {
             return response()->json([
                 'success' => false,
+                'message' => "Mahsulot topilmadi"
             ], 400);
         }
 
         if ($product->party->status == 'inactive') {
             return response()->json([
                 'success' => false,
+                'message' => "Mahsulot faol holatda emas"
             ], 400);
         }
 
@@ -63,7 +66,8 @@ class ProductController extends Controller
             'party_name' => $product->party->name,
             'rating' => $product->party->rating,
             'description' => $product->party->description,
-            'image' => asset('storage/logos/' . $product->party->image),
+            'image' => asset('storage/' . $product->party->image),
+            'brand_logo' => asset('storage/' . $product->party->brand->logo),
             'price' => $product->party->price
         ], 200);
     }

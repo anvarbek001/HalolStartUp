@@ -868,12 +868,12 @@
                                                         method="POST">
                                                         @csrf
                                                         <button class="product_add_button">
-                                                            {!! $party->partyStatusBtn() !!}
+                                                            {!! clean($party->partyStatusBtn()) !!}
                                                         </button>
                                                     </form>
                                                 @endif
                                                 <span>
-                                                    {!! $party->partyStatus() !!}
+                                                    {!! clean($party->partyStatus()) !!}
                                                 </span>
                                             @endif
                                         </div>

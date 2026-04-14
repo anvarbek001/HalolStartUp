@@ -170,7 +170,6 @@
             border-radius: 99px;
         }
 
-        /* Click button */
         .click_logo {
             padding: 4px 10px;
             cursor: pointer;
@@ -184,7 +183,6 @@
             box-shadow: inset 0 1px 0 #45c4fc;
         }
 
-        /* Payment modal */
         #pay-backdrop {
             display: none;
             position: fixed;
@@ -215,6 +213,30 @@
 </head>
 
 <body class="bg-surface-light dark:bg-surface-dark text-gray-800 dark:text-gray-100 min-h-screen">
+
+    {{-- ══ Route va config ma'lumotlari — JS uchun alohida, PHP bilan aralashmaydi ══ --}}
+    <script>
+        window.APP = {
+            routes: {
+                dashboard: "{{ route('dashboard') }}",
+                parties: "{{ route('parties') }}",
+                histories: "{{ route('histories') }}",
+                @if (auth()->check() && auth()->user()->name === 'adminstrator')
+                    admin: "{{ route('admin') }}",
+                @else
+                    admin: null,
+                @endif
+            },
+            click: {
+                serviceId: "{{ env('CLICK_SERVICE_ID') }}",
+                merchantId: "{{ env('CLICK_MERCHANT_ID') }}",
+                userId: "{{ auth()->id() }}",
+                returnUrl: "{{ url('/payment/success') }}",
+            },
+            isAdmin: {{ auth()->check() && auth()->user()->name === 'adminstrator' ? 'true' : 'false' }},
+        };
+    </script>
+
     <div class="flex h-screen overflow-hidden">
 
         {{-- ══════════ SIDEBAR ══════════ --}}
@@ -308,7 +330,6 @@
             <header
                 class="glass h-16 flex items-center px-6 gap-4 flex-shrink-0 border-b border-white/50 dark:border-gray-800 z-20">
 
-                {{-- Sidebar toggle --}}
                 <button @click="sidebarOpen = !sidebarOpen"
                     class="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -317,23 +338,22 @@
                     </svg>
                 </button>
 
-                {{-- Balance + to'ldirish --}}
                 <div class="flex items-center gap-3 text-sm">
                     <span class="text-gray-500 dark:text-gray-400">
-                        Hisob: <strong
-                            class="text-gray-800 dark:text-gray-100">{{ number_format(auth()->user()->userBalance->balance ?? 0, 0, '.', ' ') }}
-                            uzs</strong>
+                        Hisob: <strong class="text-gray-800 dark:text-gray-100">
+                            {{ number_format(auth()->user()->userBalance->balance ?? 0, 0, '.', ' ') }} uzs
+                        </strong>
                     </span>
                     <span class="text-gray-300 dark:text-gray-700">|</span>
                     <button onclick="payModal.open()" class="click_logo">Hisobni to'ldirish</button>
                     <span class="text-gray-300 dark:text-gray-700">|</span>
-                    <span class="text-gray-500 dark:text-gray-400">Brend:
-                        <strong>{{ auth()->user()->brandStatus() }}</strong></span>
+                    <span class="text-gray-500 dark:text-gray-400">
+                        Brend: <strong>{{ auth()->user()->brandStatus() }}</strong>
+                    </span>
                 </div>
 
                 <div class="flex items-center gap-2 ml-auto">
 
-                    {{-- Dark mode --}}
                     <button @click="darkMode = !darkMode"
                         class="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors">
                         <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor"
@@ -348,7 +368,6 @@
                         </svg>
                     </button>
 
-                    {{-- Notifications --}}
                     <div class="relative" x-data="{ open: false }">
                         <button @click="open = !open"
                             class="relative p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors">
@@ -390,7 +409,6 @@
                         </div>
                     </div>
 
-                    {{-- Avatar --}}
                     <a href="{{ route('profile.edit') }}"
                         class="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-400 to-accent text-white text-sm font-display font-700 flex items-center justify-center shadow-md">
                         {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
@@ -398,7 +416,6 @@
                 </div>
             </header>
 
-            {{-- PAGE CONTENT --}}
             <main class="flex-1 overflow-y-auto p-6 bg-surface-light dark:bg-surface-dark">
                 @yield('content')
             </main>
@@ -459,32 +476,47 @@
     {{-- ══════════ ALPINE DATA ══════════ --}}
     <script>
         function adminPanel() {
+            const R = window.APP.routes;
+
+            // Nav itemlarni PHP aralashmasdan quramiz
+            const baseNav = [{
+                    id: 'dashboard',
+                    label: 'Dashboard',
+                    route: R.dashboard,
+                    icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>`
+                },
+                {
+                    id: 'party',
+                    label: 'Partiyalar',
+                    route: R.parties,
+                    icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0v10l-8 4m8-14l-8 4m0 0L4 7m8 4v10M4 7v10l8 4"/></svg>`
+                },
+                {
+                    id: 'histories',
+                    label: 'Tarix',
+                    route: R.histories,
+                    icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m9-3a9 9 0 11-3-6.7M12 3v3m0 12v3"/>
+                        </svg>`
+                }
+            ];
+
+            // Admin itemni faqat JS da tekshiramiz — PHP Blade da ham himoyalangan
+            if (window.APP.isAdmin && R.admin) {
+                baseNav.push({
+                    id: 'admin',
+                    label: 'Admin',
+                    route: R.admin,
+                    icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 20a6 6 0 0112 0"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11l2 2 4-4"/></svg>`
+                });
+            }
+
             return {
                 sidebarOpen: true,
                 darkMode: false,
                 activePage: 'dashboard',
-
-                navItems: [{
-                        id: 'dashboard',
-                        label: 'Dashboard',
-                        route: '{{ route('dashboard') }}',
-                        icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>`
-                    },
-                    {
-                        id: 'party',
-                        label: 'Partiyalar',
-                        route: '{{ route('parties') }}',
-                        icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0v10l-8 4m8-14l-8 4m0 0L4 7m8 4v10M4 7v10l8 4"/></svg>`
-                    },
-                    @if (auth()->user()->name === 'adminstrator')
-                        {
-                            id: 'admin',
-                            label: 'Admin',
-                            route: '{{ route('admin') }}',
-                            icon: `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 20a6 6 0 0112 0"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11l2 2 4-4"/></svg>`
-                        },
-                    @endif
-                ],
+                navItems: baseNav,
 
                 systemItems: [{
                     id: 'help',
@@ -650,10 +682,19 @@
         // ══════ PAYMENT MODAL ══════
         const payModal = {
             QUICK: [10000, 50000, 100000, 200000],
-            SERVICE_ID: '{{ env('CLICK_SERVICE_ID') }}',
-            MERCHANT_ID: '{{ env('CLICK_MERCHANT_ID') }}',
-            USER_ID: '{{ auth()->id() }}',
-            RETURN_URL: '{{ url('/payment/success') }}',
+            // Route va configlar window.APP dan olinadi — PHP aralashmaydi
+            get SERVICE_ID() {
+                return window.APP.click.serviceId;
+            },
+            get MERCHANT_ID() {
+                return window.APP.click.merchantId;
+            },
+            get USER_ID() {
+                return window.APP.click.userId;
+            },
+            get RETURN_URL() {
+                return window.APP.click.returnUrl;
+            },
 
             open() {
                 document.getElementById('pay-amount').value = '';

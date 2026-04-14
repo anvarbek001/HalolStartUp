@@ -83,4 +83,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserBalance::class);
     }
+
+    public function partieshistories(): HasMany
+    {
+        return $this->hasMany(PartiesHistory::class);
+    }
 }

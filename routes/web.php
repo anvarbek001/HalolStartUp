@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\PartiesHistoryController;
 use App\Http\Controllers\PartyController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -52,6 +53,9 @@ Route::get('/lang/{locale}', function (string $locale) {
     }
     return back();
 })->name('lang.switch');
+
+
+Route::get('/histories', [PartiesHistoryController::class, 'index'])->name('histories');
 
 
 require __DIR__ . '/auth.php';
