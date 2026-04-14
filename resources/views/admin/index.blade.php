@@ -161,6 +161,14 @@
             animation: toastIn .4s cubic-bezier(.34, 1.56, .64, 1) both;
         }
 
+        .btn_download {
+            background: #059669;
+            border-radius: 10px;
+            font-size: 10px;
+            padding: 5px 15px;
+            color: white;
+        }
+
         @keyframes toastIn {
             from {
                 opacity: 0;
@@ -356,8 +364,8 @@
                                 <div class="text-right flex-shrink-0">
                                     @if ($user->brand->license)
                                         <p class="text-xs text-gray-400">Litsenziya</p>
-                                        <p class="text-xs font-600 text-gray-600 dark:text-gray-300">
-                                            {{ $user->brand->license }}</p>
+                                        <a href="{{ route('download.license', $user->brand->id) }}"
+                                            class="btn_download">yuklash</a>
                                     @endif
                                     @if ($user->brand->rating)
                                         <div class="flex items-center justify-end gap-1 mt-1">

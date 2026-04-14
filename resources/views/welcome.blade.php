@@ -533,7 +533,11 @@
 
         .star {
             font-size: 15px;
-            color: #fbbf24;
+            color: #ccc;
+        }
+
+        .star.active {
+            color: #f39c12;
         }
 
         .rating-val {
@@ -1580,7 +1584,7 @@
                         <div class="product-body">
                             <div class="product-name" id="party_title"></div>
                             <div class="product-rating-row">
-                                <div class="stars">
+                                <div class="stars" id="star_container">
                                     <span class="star">★</span>
                                     <span class="star">★</span>
                                     <span class="star">★</span>
@@ -1942,6 +1946,20 @@
                 return;
             }
 
+            function updateStars(rating) {
+                const ratingValue = rating;
+
+                const stars = document.querySelectorAll('#star_container .star');
+
+                stars.forEach((star, index) => {
+                    if (index < ratingValue) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
+                });
+            }
+
             btn.classList.add('loading');
             btn.disabled = true;
 
@@ -1960,6 +1978,7 @@
                     btn.classList.remove('loading');
                     btn.disabled = false;
                     if (data.success) {
+                        updateStars(data.rating);
                         document.getElementById('resultSuccess').classList.add('visible');
                         partyTitle.textContent = data.party_name;
                         partyRating.textContent = data.rating;

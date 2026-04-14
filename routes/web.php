@@ -45,6 +45,7 @@ Route::get('/admin', [AdminController::class, 'index'])->name('admin');
 Route::patch('/admin/brand/{brand}/status', [AdminController::class, 'updateBrandStatus'])
     ->name('admin.brand.status');
 
+Route::get('download/license/{brand_id}', [BrandController::class, 'downloadLicense'])->name('download.license');
 
 
 Route::get('/lang/{locale}', function (string $locale) {

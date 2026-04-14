@@ -6,6 +6,7 @@ use App\Models\Brand;
 use App\Models\Viloyat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class BrandController extends Controller
@@ -67,5 +68,21 @@ class BrandController extends Controller
         } catch (\Throwable $th) {
             return redirect()->route('brandRegister')->with('error', "Xatolik" . $th->getMessage());
         }
+    }
+
+    public function downloadLicense($brand_id)
+    {
+        $brand = Brand::findOrFail($brand_id);
+        if (!$brand) {
+            return response()->json(['message' => 'Brand topilmadi'], 404);
+        }
+
+        $filePath = storage_path('app/public/' . $brand->license);
+
+        if (!file_exists($filePath)) {
+            return back()->with('error', 'Fayl tizimda mavjud emas.');
+        }
+
+        return response()->download($filePath);
     }
 }
