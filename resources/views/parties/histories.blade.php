@@ -1,6 +1,7 @@
 @extends('layouts.index')
 
 @section('content')
+    @use('App\Enums\PartyStatus');
 
     <style>
         .page-wrap {
@@ -517,8 +518,8 @@
         {{-- ── Stats ── --}}
         @php
             $totalCount = $histories->count();
-            $activatedCount = $histories->where('after_changing_status', 'active')->count();
-            $inactiveCount = $histories->where('after_changing_status', 'inactive')->count();
+            $activatedCount = $histories->where('after_changing_status', PartyStatus::ACTIVE->value)->count();
+            $inactiveCount = $histories->where('after_changing_status', PartyStatus::INACTIVE->value)->count();
         @endphp
 
         <div class="stats-strip">
@@ -591,7 +592,7 @@
                             : ($date->isYesterday()
                                 ? 'Kecha'
                                 : $date->format('d.m.Y'));
-                        $isActivated = $history->after_changing_status === 'active';
+                        $isActivated = $history->after_changing_status === PartyStatus::ACTIVE->value;
                         $dotClass = $isActivated ? 'activated' : 'deactivated';
                         $delay += 60;
                     @endphp
@@ -625,13 +626,21 @@
                                     <div class="status-flow">
                                         @php
                                             $beforeClass =
-                                                $history->before_changing_status === 'active' ? 'active' : 'inactive';
+                                                $history->before_changing_status === PartyStatus::ACTIVE->value
+                                                    ? PartyStatus::ACTIVE->value
+                                                    : PartyStatus::INACTIVE->value;
                                             $afterClass =
-                                                $history->after_changing_status === 'active' ? 'active' : 'inactive';
+                                                $history->after_changing_status === PartyStatus::ACTIVE->value
+                                                    ? PartyStatus::ACTIVE->value
+                                                    : PartyStatus::INACTIVE->value;
                                             $beforeLabel =
-                                                $history->before_changing_status === 'active' ? 'Faol' : 'Faolsiz';
+                                                $history->before_changing_status === PartyStatus::ACTIVE->value
+                                                    ? 'Faol'
+                                                    : 'Faolsiz';
                                             $afterLabel =
-                                                $history->after_changing_status === 'active' ? 'Faol' : 'Faolsiz';
+                                                $history->after_changing_status === PartyStatus::ACTIVE->value
+                                                    ? 'Faol'
+                                                    : 'Faolsiz';
                                         @endphp
                                         <span class="status-badge {{ $beforeClass }}">
                                             <span class="status-dot"></span>

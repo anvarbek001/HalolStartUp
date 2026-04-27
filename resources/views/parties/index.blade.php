@@ -1,6 +1,8 @@
 @extends('layouts.index')
 @section('content')
 
+    @use('App\Enums\BrendStatus')
+    @use('App\Enums\PartyStatus');
     <style>
         .party-card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -662,7 +664,7 @@
                         class="download_shablon px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-600 dark:text-gray-300 hover:border-primary-400 transition-all">
                         Shablon⬇️
                     </button>
-                    @if (auth()->user()->brand->status == 'active')
+                    @if (auth()->user()->brand->status == BrendStatus::ACTIVE->value)
                         <button @click="open = true"
                             class="px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-600 dark:text-gray-300 hover:border-primary-400 transition-all">
                             + Partiya
@@ -767,7 +769,7 @@
                                                 {{ $statusLbl }}
                                             </span>
 
-                                            @if (auth()->user()->brand->status == 'active' && $party->products->isEmpty())
+                                            @if (auth()->user()->brand->status == BrendStatus::ACTIVE->value && $party->products->isEmpty())
                                                 <button command="show-modal" commandfor={{ $dialogId }}
                                                     class="product_add_button rounded-md bg-white/10 px-2.5 py-1.5 text-sm font-semibold text-white inset-ring inset-ring-white/5 hover:bg-white/20">Mahsulot+</button>
                                             @endif
@@ -827,7 +829,7 @@
                                                 </dialog>
                                             </el-dialog>
 
-                                            @if (auth()->user()->brand->status == 'active')
+                                            @if (auth()->user()->brand->status == BrendStatus::ACTIVE->value)
                                                 <button class="product_add_button" type="button"
                                                     @click="openEdit({
                                                     id: {{ $party->id }},

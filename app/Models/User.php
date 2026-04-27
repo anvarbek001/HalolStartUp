@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Enums\BrendStatus;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -57,10 +58,14 @@ class User extends Authenticatable
 
     public function brandStatus()
     {
-        if ($this->brand->status == 'active') {
-            return '✅faol';
-        } elseif ($this->brand->status == 'inactive') {
-            return '⚪nofaol';
+        if ($this->brand->status == BrendStatus::ACTIVE->value) {
+            return '✅' . BrendStatus::ACTIVE->label();
+        } elseif ($this->brand->status == BrendStatus::INACTIVE->value) {
+            return '⚪' . BrendStatus::INACTIVE->label();
+        } elseif ($this->brand->status == BrendStatus::PENDING->value) {
+            return '⏳' . BrendStatus::PENDING->label();
+        } elseif ($this->brand->status == BrendStatus::BLOCKED->value) {
+            return '🚫' . BrendStatus::BLOCKED->label();
         }
     }
 

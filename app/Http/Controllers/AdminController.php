@@ -34,4 +34,24 @@ class AdminController extends Controller
             'status'  => $brand->status,
         ]);
     }
+
+    // public function help($userId = null)
+    // {
+    //     $users = User::where('id', '!=', Auth::user())->get();
+
+    //     $messages = [];
+    //     $selectedUser = null;
+
+    //     if ($userId) {
+    //         $selectedUser = User::findOrFail($userId);
+    //         // Admin va tanlangan user o'rtasidagi xabarlar
+    //         $messages = Message::where(function ($q) use ($userId) {
+    //             $q->where('sender_id', auth()->id())->where('receiver_id', $userId);
+    //         })->orWhere(function ($q) use ($userId) {
+    //             $q->where('sender_id', $userId)->where('receiver_id', auth()->id());
+    //         })->orderBy('created_at', 'asc')->get();
+    //     }
+
+    //     return view('admin.chat', compact('users', 'messages', 'selectedUser'));
+    // }
 }

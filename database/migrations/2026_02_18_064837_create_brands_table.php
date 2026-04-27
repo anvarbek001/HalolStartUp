@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\BrendStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,7 +22,7 @@ return new class extends Migration
             $table->string('rating')->default('0');
             $table->text('description');
             $table->integer('order');
-            $table->string('status')->default('inactive');
+            $table->string('status')->default(BrendStatus::INACTIVE->value);
             $table->timestamps();
         });
     }

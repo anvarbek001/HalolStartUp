@@ -1,6 +1,6 @@
 @extends('layouts.index')
 @section('content')
-
+    @use('App\Enums\BrendStatus');
     <style>
         .user-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -207,8 +207,8 @@
     {{-- ══════════ STATS ══════════ --}}
     @php
         $totalBrands = $users->filter(fn($u) => $u->brand)->count();
-        $activeBrands = $users->filter(fn($u) => $u->brand?->status === 'active')->count();
-        $pendingBrands = $users->filter(fn($u) => $u->brand?->status === 'pending')->count();
+        $activeBrands = $users->filter(fn($u) => $u->brand?->status === BrendStatus::ACTIVE->value)->count();
+        $pendingBrands = $users->filter(fn($u) => $u->brand?->status === BrendStatus::PENDING->value)->count();
     @endphp
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 animate-fade-in">
@@ -305,10 +305,14 @@
                                         <div class="relative flex items-center gap-2">
                                             <select class="status-select status-{{ $user->brand->status }}"
                                                 data-brand-id="{{ $user->brand->id }}" onchange="changeStatus(this)">
-                                                <option value="active" @selected($user->brand->status === 'active')>✅ Faol</option>
-                                                <option value="inactive" @selected($user->brand->status === 'inactive')>⚪ Nofaol</option>
-                                                <option value="pending" @selected($user->brand->status === 'pending')>⏳ Kutilmoqda</option>
-                                                <option value="blocked" @selected($user->brand->status === 'blocked')>🚫 Bloklangan</option>
+                                                <option value="active" @selected($user->brand->status === BrendStatus::ACTIVE->value)>✅
+                                                    {{ BrendStatus::ACTIVE->label() }}</option>
+                                                <option value="inactive" @selected($user->brand->status === BrendStatus::INACTIVE->value)>⚪
+                                                    {{ BrendStatus::INACTIVE->label() }}</option>
+                                                <option value="pending" @selected($user->brand->status === BrendStatus::PENDING->value)>⏳
+                                                    {{ BrendStatus::PENDING->label() }}</option>
+                                                <option value="blocked" @selected($user->brand->status === BrendStatus::BLOCKED->value)>🚫
+                                                    {{ BrendStatus::BLOCKED->label() }}</option>
                                             </select>
                                             <svg class="spinner w-4 h-4 animate-spin text-gray-400 flex-shrink-0 hidden"
                                                 fill="none" viewBox="0 0 24 24">

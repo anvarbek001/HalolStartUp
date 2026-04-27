@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PartyStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,7 +21,7 @@ return new class extends Migration
             $table->text('description');
             $table->bigInteger('order');
             $table->string('image');
-            $table->string('status')->default('inactive');
+            $table->string('status')->default(PartyStatus::INACTIVE->value);
             $table->string('payment_status')->default('unpaid');
             $table->integer('product_count')->default(0);
             $table->bigInteger('uniq_id')->nullable();

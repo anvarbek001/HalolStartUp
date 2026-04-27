@@ -47,6 +47,8 @@ Route::patch('/admin/brand/{brand}/status', [AdminController::class, 'updateBran
 
 Route::get('download/license/{brand_id}', [BrandController::class, 'downloadLicense'])->name('download.license');
 
+Route::get('/help', [AdminController::class, 'help'])->name('help');
+
 
 Route::get('/lang/{locale}', function (string $locale) {
     if (in_array($locale, ['uz', 'ru', 'en'])) {

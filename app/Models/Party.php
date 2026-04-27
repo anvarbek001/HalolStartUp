@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PartyStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -42,18 +43,18 @@ class Party extends Model
 
     public function partyStatus()
     {
-        if ($this->status == 'inactive') {
+        if ($this->status == PartyStatus::INACTIVE->value) {
             return '<span style="color:red;">Nofaol</span>';
-        } elseif ($this->status == 'active') {
+        } elseif ($this->status == PartyStatus::ACTIVE->value) {
             return '<span style="color:green;">Faol</span>';
         }
     }
 
     public function partyStatusBtn()
     {
-        if ($this->status == 'inactive') {
+        if ($this->status == PartyStatus::INACTIVE->value) {
             return '<span style="color:green;">faollashtirish</span>';
-        } elseif ($this->status == 'active') {
+        } elseif ($this->status == PartyStatus::ACTIVE->value) {
             return '<span style="color:red;">nofaollashtirish</span>';
         }
     }
