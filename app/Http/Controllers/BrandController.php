@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BrandStoreRequest;
 use App\Models\Brand;
 use App\Models\Viloyat;
+use App\Repositories\BrandRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -18,21 +20,9 @@ class BrandController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(BrandStoreRequest $request, BrandRepository $brandRepo)
     {
         try {
-            $validate = Validator::make($request->all(), [
-                'name' => 'required|string',
-                'viloyat_id' => 'required',
-                'description' => 'required',
-                'license' => 'required|mimes:jpg,png,jpeg,pdf|max:4048',
-                'logo' => 'required|mimes:jpg,png,jpeg|max:4048'
-            ]);
-
-            if ($validate->fails()) {
-                return redirect()->route('brandRegister')->with('error', "Malumotlar formati to'liq emas qaytadan urunib ko'ring");
-            }
-
             if ($request->hasFile('license')) {
                 $nameLicense = time() . '_' . $request->file('license')->getClientOriginalName();
                 $pathLicense = $request->file('license')->storeAs('licenses', $nameLicense, 'public');
@@ -48,7 +38,7 @@ class BrandController extends Controller
                 $order = $brand->order + 1;
             }
 
-            $brandName = Brand::where('name', $request->name)->first();
+            $brandName = $brandRepo->findBrand($request);
 
             if ($brandName) {
                 return redirect()->route('brandRegister')->with('error', "Bunday brend nomi bazada mavjud");
@@ -70,9 +60,9 @@ class BrandController extends Controller
         }
     }
 
-    public function downloadLicense($brand_id)
+    public function downloadLicense($brand_id, BrandRepository $brandRepo)
     {
-        $brand = Brand::findOrFail($brand_id);
+        $brand = $brandRepo->findOrFileBrand($brand_id);
         if (!$brand) {
             return response()->json(['message' => 'Brand topilmadi'], 404);
         }

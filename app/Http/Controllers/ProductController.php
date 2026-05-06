@@ -2,23 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductShablonImportRequest;
+use App\Http\Requests\QRCodeCheckRequest;
 use App\Imports\ProductsImport;
 use App\Models\Product;
+use App\Repositories\ProductRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
-    public function import(Request $request)
+    public function import(ProductShablonImportRequest $request)
     {
-        // dd($request->all());
         try {
-            $request->validate([
-                'file'     => 'required|mimes:xlsx,xls',
-                'party_id' => 'required|exists:parties,id',
-            ]);
-
             Excel::import(new ProductsImport((int) $request->party_id), $request->file('file'));
 
             return redirect()->route('parties')->with('success', "Mahsulotlar muvaffaqiyatli kiritildi");
@@ -29,20 +26,9 @@ class ProductController extends Controller
         }
     }
 
-    public function check(Request $request)
+    public function check(QRCodeCheckRequest $request, ProductRepository $productRepo)
     {
-        $validate = Validator::make($request->all(), [
-            'qrcode' => 'required'
-        ]);
-
-        if ($validate->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => "So'rov turida xatolik"
-            ], 422);
-        }
-
-        $product = Product::where('qrcode_number', $request->qrcode)->first();
+        $product = $productRepo->findProductByQrCode($request->qrcode);
 
         if (!$product) {
             return response()->json([

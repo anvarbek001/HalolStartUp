@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CustomerRegisterRequest;
+use App\Http\Requests\LoginRequest;
 use App\Models\Customer;
+use App\Repositories\CustomerRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -11,24 +14,9 @@ use Maatwebsite\Excel\Validators\ValidationException;
 
 class CustomerController extends Controller
 {
-    public function register(Request $request)
+    public function register(CustomerRegisterRequest $request, CustomerRepository $customRepo)
     {
-        $validate = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-            'email' => 'required|email|unique:customers,email',
-            'phone' => 'nullable|max:20',
-            'password' => 'required|min:6|confirmed'
-        ]);
-
-        if ($validate->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => "Ma'lumotlar kiritishda xatolik.",
-                'errors' => $validate->getMessageBag()
-            ], 422);
-        }
-
-        $email = Customer::where('email', $request->email)->first();
+        $email = $customRepo->findCustomer($request->email);
         if ($email) {
             return response()->json([
                 'success' => false,
@@ -53,22 +41,9 @@ class CustomerController extends Controller
         ], 201);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request, CustomerRepository $customRepo)
     {
-        $validate = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6'
-        ]);
-
-        if ($validate->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => "Ma'lumotlar xatolik.Login yoki parol xato.",
-                'error' => $validate->errors()
-            ], 422);
-        }
-
-        $customer = Customer::where('email', $request->email)->first();
+        $customer = $customRepo->findCustomer($request->email);
         if (!$customer || !Hash::check($request->password, $customer->password)) {
             throw ValidationException::withMessages([
                 response()->json([

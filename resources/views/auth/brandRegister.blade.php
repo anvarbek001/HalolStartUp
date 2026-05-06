@@ -352,7 +352,6 @@
                 <form method="POST" action="{{ route('brand.store') }}" enctype="multipart/form-data"
                     @submit.prevent="submitForm">
                     @csrf
-
                     <!-- ═══ STEP 1: Asosiy ma'lumotlar ═══ -->
                     <div x-show="currentStep === 0" x-transition:enter="transition ease-out duration-300"
                         x-transition:enter-start="opacity-0 translate-x-4"
@@ -364,7 +363,6 @@
                         </h2>
 
                         <div class="space-y-5">
-
                             <!-- Brend nomi -->
                             <div>
                                 <label class="form-label">Brend nomi *</label>

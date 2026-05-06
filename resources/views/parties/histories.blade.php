@@ -1,8 +1,7 @@
 @extends('layouts.index')
 
 @section('content')
-    @use('App\Enums\PartyStatus');
-
+    @use('App\Enums\PartyStatus')
     <style>
         .page-wrap {
             max-width: 900px;

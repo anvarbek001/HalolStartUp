@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PartyStatus;
+use App\Enums\PaymentStatus;
+use App\Http\Requests\PartyStoreRequest;
+use App\Http\Requests\PartyUpdateRequest;
+use App\Http\Requests\ShablonRequest;
 use App\Imports\ProductsImport;
 use App\Models\Brand;
 use App\Models\PartiesHistory;
 use App\Models\Party;
 use App\Models\UserBalance;
+use App\Repositories\BrandRepository;
+use App\Repositories\PartyRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,35 +23,18 @@ use Maatwebsite\Excel\Excel;
 
 class PartyController extends Controller
 {
-    public function index()
+    public function index(BrandRepository $brandRepo, PartyRepository $partyRepo)
     {
-        $parties = Party::with('products')
-            ->where('brand_id', Auth::user()->brand->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
-        $brand = Brand::where('user_id', Auth::user()->id)->first();
+        $parties = $partyRepo->findByUserParty();
+        $brand = $brandRepo->findByUser();
         return view('parties.index', [
             'parties' => $parties,
             'brand'  => $brand,
         ]);
     }
 
-    public function store(Request $request)
+    public function store(PartyStoreRequest $request)
     {
-        // dd($request->all());
-        $validate = Validator::make($request->all(), [
-            'name' => 'required',
-            'price' => 'required',
-            'rating' => 'nullable',
-            'description' => 'string',
-            'image' => 'required|mimes:jpg,png,jpeg,max:4096'
-        ]);
-
-        if ($validate->fails()) {
-            return redirect()->route('parties')->with('error', "Ma'lumotlar to'liq emas qaytadan kiriting!");
-        }
-
         if ($request->hasFile('image')) {
             $name = time() . '_' . $request->file('image')->getClientOriginalName();
             $path = $request->file('image')->storeAs('brandImages', $name, 'public');
@@ -76,20 +66,8 @@ class PartyController extends Controller
         return redirect()->route('parties')->with('success', "Partiya qo'shildi");
     }
 
-    public function shablon(Request $request)
+    public function shablon(ShablonRequest $request)
     {
-        $validate = Validator::make($request->all(), [
-            'id' => 'required'
-        ]);
-
-        if ($validate->fails()) {
-            return response()->json([
-                'success' => false,
-                'errorCode' => 422,
-                'message' => "Foydalanuvchi topilmadi"
-            ]);
-        }
-
         $path = public_path('storage/shablon/Shablon.xlsx');
 
         if (!file_exists($path)) {
@@ -102,7 +80,7 @@ class PartyController extends Controller
         return response()->download($path, 'Shablon.xlsx');
     }
 
-    public function update(Request $request, Party $party)
+    public function update(PartyUpdateRequest $request, Party $party)
     {
         $validated = $request->validate([
             'name'             => 'required|string|max:255',
@@ -150,7 +128,7 @@ class PartyController extends Controller
         }
 
         if ($party->status == 'inactive') {
-            if ($party->payment_status == 'unpaid') {
+            if ($party->payment_status == PaymentStatus::UNPAID->value) {
                 $productCount = count($party->products);
                 if ($productCount <= 0) {
                     return back()->with('error', "Partiyani faolashtirish uchun mahsulot qo'shing");
@@ -167,7 +145,7 @@ class PartyController extends Controller
                 if ($result < 0) {
                     return back()->with('error', "Hisobingizda $neededPrice so'm mablag' yetarli emas");
                 }
-                $party->payment_status = 'paid';
+                $party->payment_status = PaymentStatus::PAID->value;
                 $party->status = 'active';
                 $party->save();
                 $balance = UserBalance::where('user_id', Auth::user()->id)->first();
