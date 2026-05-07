@@ -6,6 +6,7 @@ use App\Http\Requests\BrandStoreRequest;
 use App\Models\Brand;
 use App\Models\Viloyat;
 use App\Repositories\BrandRepository;
+use App\Services\BrandService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -20,40 +21,19 @@ class BrandController extends Controller
         ]);
     }
 
-    public function store(BrandStoreRequest $request, BrandRepository $brandRepo)
+    public function store(BrandStoreRequest $request, BrandService $service)
     {
         try {
-            if ($request->hasFile('license')) {
-                $nameLicense = time() . '_' . $request->file('license')->getClientOriginalName();
-                $pathLicense = $request->file('license')->storeAs('licenses', $nameLicense, 'public');
-            }
-            if ($request->hasFile('logo')) {
-                $nameLogo = time() . '_' . $request->file('logo')->getClientOriginalName();
-                $pathLogo = $request->file('logo')->storeAs('logos', $nameLogo, 'public');
-            }
-            $order = 1;
-
-            $brand = Brand::orderByDesc('order')->first();
-            if ($brand) {
-                $order = $brand->order + 1;
-            }
-
-            $brandName = $brandRepo->findBrand($request);
-
-            if ($brandName) {
-                return redirect()->route('brandRegister')->with('error', "Bunday brend nomi bazada mavjud");
-            }
-
-            Brand::create([
-                'user_id' => Auth::user()->id,
+            $service->checkBrandName($request->name);
+            $files = $service->fileUpload($request);
+            $service->createBrand([
                 'viloyat_id' => $request->viloyat_id,
                 'name' => $request->name,
-                'license' => $pathLicense,
-                'logo' => $pathLogo,
+                'license' => $files['license'],
+                'logo' => $files['logo'],
                 'description' => $request->description,
-                'order' => $order
+                'order' => $service->getNextOrder()
             ]);
-
             return redirect()->route('dashboard')->with('success', "Brend ro'yxatdan o'tkazildi tasdiqlanishini kuting");
         } catch (\Throwable $th) {
             return redirect()->route('brandRegister')->with('error', "Xatolik" . $th->getMessage());

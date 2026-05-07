@@ -1508,6 +1508,7 @@
                         <option value="uz" {{ app()->getLocale() === 'uz' ? 'selected' : '' }}>🇺🇿 UZ</option>
                         <option value="ru" {{ app()->getLocale() === 'ru' ? 'selected' : '' }}>🇷🇺 RU</option>
                         <option value="en" {{ app()->getLocale() === 'en' ? 'selected' : '' }}>🇬🇧 EN</option>
+                        <option value="qal" {{ app()->getLocale() === 'qal' ? 'selected' : '' }}>qr QAR</option>
                     </select>
                 </div>
                 @if (Route::has('login'))

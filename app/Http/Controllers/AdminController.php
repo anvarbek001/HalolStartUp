@@ -21,7 +21,6 @@ class AdminController extends Controller
     public function updateBrandStatus(UpdateBrandStatusRequest $request, Brand $brand)
     {
         $brand->update(['status' => $request->status]);
-
         return response()->json([
             'success' => true,
             'message' => 'Status yangilandi',
