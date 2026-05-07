@@ -3,7 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Override;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class CustomerRegisterRequest extends FormRequest
 {
@@ -24,7 +25,7 @@ class CustomerRegisterRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255',
-            'email' => 'required|email|unique:customers,email',
+            'email' => ['required', 'email', Rule::unique('customers', 'email')],
             'phone' => 'nullable|max:20',
             'password' => 'required|min:6|confirmed'
         ];
@@ -35,6 +36,7 @@ class CustomerRegisterRequest extends FormRequest
         return [
             'name.required' => "Foydalanuvchi nomi kiritilmagan",
             'email.required' => "Email kiritilmagan",
+            'email.unique' => "Bu email allaqachon ro'yxatdan o'tgan",
             'password.required' => "Parol kiritilmagan",
         ];
     }

@@ -7,6 +7,7 @@ use App\Http\Requests\CustomerRegisterRequest;
 use App\Http\Requests\LoginRequest;
 use App\Models\Customer;
 use App\Repositories\CustomerRepository;
+use App\Services\CustomerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -14,23 +15,9 @@ use Maatwebsite\Excel\Validators\ValidationException;
 
 class CustomerController extends Controller
 {
-    public function register(CustomerRegisterRequest $request, CustomerRepository $customRepo)
+    public function register(CustomerRegisterRequest $request, CustomerService $service)
     {
-        $email = $customRepo->findCustomer($request->email);
-        if ($email) {
-            return response()->json([
-                'success' => false,
-                'message' => "Bunday email oldin ro'yxatdan o'tgan.",
-            ], 422);
-        }
-
-        $customer = Customer::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => Hash::make($request->password),
-        ]);
-
+        $customer = $service->customerRegister($request);
         $token = $customer->createToken('mobile-app')->plainTextToken;
         return response()->json([
             'success' => true,

@@ -10,4 +10,14 @@ class CustomerRepository
     {
         return Customer::where('email', $email)->first();
     }
+
+    public function customerCreate(array $data)
+    {
+        return  Customer::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'password' => $data['password'],
+        ]);
+    }
 }

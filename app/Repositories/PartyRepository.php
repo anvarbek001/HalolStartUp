@@ -21,4 +21,18 @@ class PartyRepository
     {
         return PartiesHistory::orderBy('id', 'DESC')->cursorPaginate(20);
     }
+
+    public function partyCreate(array $data)
+    {
+        return Party::create([
+            'user_id' => $data['userId'],
+            'brand_id' => $data['brandId'],
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'order' => $data['order'],
+            'image' => $data['path'],
+            'uniq_id' => $data['uniqId'],
+            'price' => $data['price']
+        ]);
+    }
 }

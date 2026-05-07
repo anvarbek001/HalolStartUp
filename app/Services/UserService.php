@@ -2,6 +2,10 @@
 
 namespace App\Services;
 
-class UserService {
-    
+use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Auth;
+
+class UserService
+{
+   
 }

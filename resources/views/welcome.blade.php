@@ -1508,7 +1508,7 @@
                         <option value="uz" {{ app()->getLocale() === 'uz' ? 'selected' : '' }}>🇺🇿 UZ</option>
                         <option value="ru" {{ app()->getLocale() === 'ru' ? 'selected' : '' }}>🇷🇺 RU</option>
                         <option value="en" {{ app()->getLocale() === 'en' ? 'selected' : '' }}>🇬🇧 EN</option>
-                        <option value="qal" {{ app()->getLocale() === 'qal' ? 'selected' : '' }}>qr QAR</option>
+                        {{-- <option value="qal" {{ app()->getLocale() === 'qal' ? 'selected' : '' }}>qr QAR</option> --}}
                     </select>
                 </div>
                 @if (Route::has('login'))
@@ -1715,9 +1715,7 @@
                     @foreach ($brands as $brand)
                         <div class="brand-pill"><span class="brand-pill-icon"><img
                                     src="{{ asset('storage/' . $brand->logo) }}" class="brand_logo"
-                                    alt=""></span><span
-                                class="brand-pill-name">{{ $brand->name }}</span><span class="brand-pill-badge">✓
-                                Halol</span>
+                                    alt=""></span><span class="brand-pill-name">{{ $brand->name }}</span>
                         </div>
                     @endforeach
                 </div>
@@ -1847,7 +1845,11 @@
         <div class="footer-top">
             <div>
                 <a href="/" class="footer-brand-logo">
-                    <div class="footer-brand-icon">🌿</div>
+                    <div class="footer-brand-icon">
+                        <div class="logo-icon">
+                            <img src="halol/halol.jpg" alt="Halol">
+                        </div>
+                    </div>
                     <span class="footer-brand-name">Halol</span>
                 </a>
                 <p class="footer-brand-desc">{{ __('app.footer_desc') }}</p>
@@ -1911,10 +1913,10 @@
         <div class="footer-bottom">
             <span class="footer-copy">&copy; {{ date('Y') }} Halol. {{ __('app.footer_rights') }} · <a
                     href="#">O'zbekiston</a></span>
-            <div class="footer-bottom-badges">
+            {{-- <div class="footer-bottom-badges">
                 <span class="footer-badge">{{ __('app.footer_badge_halol') }}</span>
                 <span class="footer-badge">{{ __('app.footer_badge_made') }}</span>
-            </div>
+            </div> --}}
         </div>
     </footer>
 

@@ -14,6 +14,12 @@ class AdminController extends Controller
 {
     public function index(UserRepository $userRepo)
     {
+        $user = Auth::user();
+
+        if (!$user->brand->id) {
+            return redirect()->route('brandRegister')->with('error', "Foydalanuvchida brend ro'yxatga olinmagan");
+        };
+
         $users = $userRepo->findUser();
         return view('admin.index', ['users' => $users]);
     }

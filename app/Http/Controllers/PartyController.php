@@ -14,6 +14,7 @@ use App\Models\Party;
 use App\Models\UserBalance;
 use App\Repositories\BrandRepository;
 use App\Repositories\PartyRepository;
+use App\Services\PartyService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,36 +34,9 @@ class PartyController extends Controller
         ]);
     }
 
-    public function store(PartyStoreRequest $request)
+    public function store(PartyStoreRequest $request, PartyService $service)
     {
-        if ($request->hasFile('image')) {
-            $name = time() . '_' . $request->file('image')->getClientOriginalName();
-            $path = $request->file('image')->storeAs('brandImages', $name, 'public');
-        }
-
-        $brand = Brand::where('user_id', Auth::user()->id)->latest()->first();
-        $order = 0;
-        $uniqId = Auth::user()->id . $brand->id;
-
-        if ($brand) {
-            $order = $brand->order + 1;
-            $uniqId = $brand->uniq_id + 1;
-        }
-
-        $userId = Auth::user()->id;
-        $brandId = Auth::user()->brand->id;
-
-        Party::create([
-            'user_id' => $userId,
-            'brand_id' => $brandId,
-            'name' => $request->name,
-            'description' => $request->description,
-            'order' => $order,
-            'image' => $path,
-            'uniq_id' => $uniqId,
-            'price' => $request->price
-        ]);
-
+        $service->partyStore($request);
         return redirect()->route('parties')->with('success', "Partiya qo'shildi");
     }
 
