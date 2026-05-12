@@ -2,6 +2,7 @@
 return [
     // NAV
     'login'           => 'Kirish',
+    'logout'          => 'Chiqish',
     'register'        => "Ro'yxatdan o'tish",
     'panel'           => 'Panel',
     'reliable'        => 'Ishonchli mahsulot tekshiruvi',

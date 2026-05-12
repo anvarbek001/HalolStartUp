@@ -14,8 +14,10 @@ use Illuminate\Support\Facades\Validator;
 
 class BrandController extends Controller
 {
-    public function index()
+    public function index(BrandService $service)
     {
+        $service->userBrandCheck();
+
         return view('auth/brandRegister', [
             'viloyatlar' => Viloyat::all(),
         ]);
@@ -23,6 +25,7 @@ class BrandController extends Controller
 
     public function store(BrandStoreRequest $request, BrandService $service)
     {
+        $service->userBrandCheck();
         try {
             $service->checkBrandName($request->name);
             $files = $service->fileUpload($request);

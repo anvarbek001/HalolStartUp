@@ -2,6 +2,7 @@
 return [
     // NAV
     'login'           => 'Login',
+    'logout'          => 'Logout',
     'register'        => 'Register',
     'panel'           => 'Dashboard',
     'reliable'        => 'Reliable Product Verification',

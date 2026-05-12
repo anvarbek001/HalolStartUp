@@ -12,6 +12,11 @@ class BrandRepository
         return Brand::where('name', $name)->first();
     }
 
+    public function findBrandByNormalizedName($name)
+    {
+        return Brand::whereRaw('LOWER(TRIM(name)) = ?', [$name])->first();
+    }
+
     public function getLastByOrder()
     {
         return Brand::orderByDesc('order')->first();

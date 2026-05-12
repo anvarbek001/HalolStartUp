@@ -23,6 +23,7 @@ class ProductFactory extends Factory
             'party_id' => $party->id,
             'user_id' => $user->id,
             'qrcode_number' => random_int(12345678901000, 12345678909999),
+            'barcode_number' => random_int(12345678901000, 12345678909999),
             'scan_count' => random_int(10, 25)
         ];
     }

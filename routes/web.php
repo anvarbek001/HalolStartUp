@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PartiesHistoryController;
 use App\Http\Controllers\PartyController;
 use App\Http\Controllers\ProductController;
@@ -17,9 +18,7 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/brandRegister', [BrandController::class, 'index'])->middleware(['auth', 'verified'])->name('brandRegister');
 

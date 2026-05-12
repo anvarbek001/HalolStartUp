@@ -31,6 +31,10 @@ class ProductController extends Controller
         $product = $productRepo->findProductByQrCode($request->qrcode);
 
         if (!$product) {
+            $product = $productRepo->findProductByBarCode($request->qrcode);
+        }
+
+        if (!$product) {
             return response()->json([
                 'success' => false,
                 'message' => "Mahsulot topilmadi"

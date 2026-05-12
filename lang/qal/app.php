@@ -2,6 +2,7 @@
 return [
     // NAV
     'login'           => 'Kiriw',
+    'logout'          => 'Shıǵıw',
     'register'        => "Dizimnen ótiw",
     'panel'           => 'Panel',
     'reliable'        => 'Isenimli ónim tekseriwi',

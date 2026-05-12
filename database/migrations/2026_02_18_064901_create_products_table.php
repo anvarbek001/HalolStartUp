@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('party_id')->constrained('parties')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->bigInteger('qrcode_number');
-            $table->bigInteger('barcode_number')->nullable();
+            $table->string('qrcode_number');
+            $table->string('barcode_number')->nullable();
             $table->integer('scan_count')->default(0);
             $table->timestamps();
         });

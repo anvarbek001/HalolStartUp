@@ -1518,6 +1518,13 @@
                         @else
                             <a href="{{ url('/brandRegister') }}" class="nav-link">{{ __('app.panel') }}</a>
                         @endif
+                        <form action="{{ route('logout') }}" method="POST" class="ml-auto">
+                            @csrf
+                            <button type="submit" class="nav-link"
+                                style="border: none; outline:none; background:transparent;">
+                                {{ __('app.logout') }}
+                            </button>
+                        </form>
                     @else
                         <a href="{{ route('login') }}" class="nav-link">{{ __('app.login') }}</a>
                         @if (Route::has('register'))
