@@ -228,6 +228,7 @@
                     admin: null,
                 @endif
             },
+            stats: @json($stats ?? []),
             click: {
                 serviceId: "{{ env('CLICK_SERVICE_ID') }}",
                 merchantId: "{{ env('CLICK_MERCHANT_ID') }}",
@@ -518,6 +519,31 @@
                 darkMode: false,
                 activePage: 'dashboard',
                 navItems: baseNav,
+                activePeriod: 'Oy',
+                stats: window.APP.stats,
+
+                trafficSources: [
+                    {
+                        label: 'Organik',
+                        value: 42,
+                        color: 'bg-blue-500'
+                    },
+                    {
+                        label: "To'g'ridan",
+                        value: 28,
+                        color: 'bg-emerald-400'
+                    },
+                    {
+                        label: 'Ijtimoiy',
+                        value: 18,
+                        color: 'bg-amber-400'
+                    },
+                    {
+                        label: 'Boshqa',
+                        value: 12,
+                        color: 'bg-purple-400'
+                    },
+                ],
 
                 systemItems: [{
                     id: 'help',

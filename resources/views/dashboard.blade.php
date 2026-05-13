@@ -1,22 +1,3 @@
-{{-- <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
-        </div>
-    </div>
-</x-app-layout> --}}
-
-
 @extends('layouts.index')
 @section('content')
     <!-- Page heading -->
@@ -132,7 +113,7 @@
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
 
         <!-- Users table -->
-        <div
+        {{-- <div
             class="xl:col-span-2 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
                 <h2 class="font-display font-700 text-gray-900 dark:text-white">So'nggi foydalanuvchilar
@@ -212,10 +193,10 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Recent activity -->
-        <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
+        {{-- <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
             <h2 class="font-display font-700 text-gray-900 dark:text-white mb-5">So'nggi faollik</h2>
             <div class="space-y-4 relative">
                 <div
@@ -234,7 +215,7 @@
                     </div>
                 </template>
             </div>
-        </div>
+        </div> --}}
 
     </div>
 
@@ -245,8 +226,7 @@
                 style="background:rgba(16,185,129,0.12); border-color:rgba(16,185,129,0.25); pointer-events:all; min-width:300px;">
                 <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
                     style="background:rgba(16,185,129,0.2);">
-                    <svg class="w-4 h-4" style="color:#10b981;" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-4 h-4" style="color:#10b981;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                 </div>
@@ -264,8 +244,7 @@
                 style="background:rgba(248,113,113,0.1); border-color:rgba(248,113,113,0.25); pointer-events:all; min-width:300px;">
                 <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
                     style="background:rgba(248,113,113,0.15);">
-                    <svg class="w-4 h-4" style="color:#f87171;" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+                    <svg class="w-4 h-4" style="color:#f87171;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </div>

@@ -2,7 +2,7 @@
 @section('content')
 
     @use('App\Enums\BrendStatus')
-    @use('App\Enums\PartyStatus');
+    @use('App\Enums\PartyStatus')
     <style>
         .party-card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
