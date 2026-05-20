@@ -7,6 +7,7 @@ use App\Http\Requests\QRCodeCheckRequest;
 use App\Imports\ProductsImport;
 use App\Models\Product;
 use App\Repositories\ProductRepository;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
@@ -26,30 +27,9 @@ class ProductController extends Controller
         }
     }
 
-    public function check(QRCodeCheckRequest $request, ProductRepository $productRepo)
+    public function check(QRCodeCheckRequest $request, ProductService $service)
     {
-        $product = $productRepo->findProductByQrCode($request->qrcode);
-
-        if (!$product) {
-            $product = $productRepo->findProductByBarCode($request->qrcode);
-        }
-
-        if (!$product) {
-            return response()->json([
-                'success' => false,
-                'message' => "Mahsulot topilmadi"
-            ], 400);
-        }
-
-        if ($product->party->status == 'inactive') {
-            return response()->json([
-                'success' => false,
-                'message' => "Mahsulot faol holatda emas"
-            ], 400);
-        }
-
-        $product->scan_count += 1;
-        $product->save();
+        $product = $service->findProduct($request->qrcode);
 
         return response()->json([
             'success' => true,

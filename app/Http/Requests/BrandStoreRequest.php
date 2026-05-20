@@ -24,6 +24,7 @@ class BrandStoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
+            'stir' => 'required',
             'viloyat_id' => 'required',
             'description' => 'required',
             'license' => 'required|mimes:jpg,png,jpeg,pdf|max:4048',
@@ -35,6 +36,7 @@ class BrandStoreRequest extends FormRequest
     {
         return [
             'name.required' => "Brend nomi majburiy",
+            'stir.required' => 'STIR majburiy',
             'viloyat_id.required' => 'Viloyat majburiy',
             'description.required' => 'Izoh majburiy',
             'license.required' => 'Litsenziya majburiy',

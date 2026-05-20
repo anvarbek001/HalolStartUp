@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<!-- darkMode miltillashini oldini olish -->
+<script>
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.documentElement.classList.add('dark');
+    }
+</script>
 <html lang="uz" x-data="adminPanel()" :class="{ 'dark': darkMode }">
 
 <head>
@@ -516,14 +522,13 @@
 
             return {
                 sidebarOpen: true,
-                darkMode: false,
+                darkMode: localStorage.getItem('darkMode') === 'true',
                 activePage: 'dashboard',
                 navItems: baseNav,
                 activePeriod: 'Oy',
                 stats: window.APP.stats,
 
-                trafficSources: [
-                    {
+                trafficSources: [{
                         label: 'Organik',
                         value: 42,
                         color: 'bg-blue-500'
@@ -579,6 +584,11 @@
                 ],
 
                 init() {
+
+                    this.$watch('darkMode', val => {
+                        localStorage.setItem('darkMode', val);
+                    });
+
                     const found = this.navItems.find(i => i.route === window.location.href);
                     if (found) this.activePage = found.id;
                     this.$nextTick(() => {

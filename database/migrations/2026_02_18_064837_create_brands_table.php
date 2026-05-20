@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('viloyat_id')->constrained('viloyats')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name')->unique();
+            $table->string('stir');
             $table->string('license');
             $table->string('logo');
             $table->string('rating')->default('0');

@@ -12,6 +12,7 @@ class Brand extends Model
         'user_id',
         'viloyat_id',
         'name',
+        'stir',
         'license',
         'logo',
         'rating',
